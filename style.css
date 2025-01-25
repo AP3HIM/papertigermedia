@@ -53,7 +53,7 @@ footer {
 .post p {
     margin: 10px 0;
 }
-/* Ensure the page takes up the full height and allows scrolling */
+
 html, body {
     height: 100%;
     margin: 0;
@@ -61,7 +61,7 @@ html, body {
     overflow-y: auto;
 }
 
-/* Style for posts to ensure proper spacing */
+
 .post {
     margin-bottom: 20px;
 }
@@ -69,7 +69,6 @@ html, body {
 #blog-container {
     padding: 15px;
 }
-/* Optional: Customize the scrollbar (only works in modern browsers) */
 ::-webkit-scrollbar {
     width: 8px;
 }
