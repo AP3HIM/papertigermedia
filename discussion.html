@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discussions - Paper Tiger Media</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Discussion Board</h1>
+        <nav>
+            <a href="index.html">Home</a> | 
+            <a href="discussions.html">Discussions</a>
+        </nav>
+    </header>
+    <main>
+        <section id="discussion-board">
+            <h2>Join the Conversation</h2>
+            <form id="discussion-form">
+                <label for="username">Name:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="4" required></textarea>
+
+                <button type="submit">Post</button>
+            </form>
+
+            <div id="discussion-posts">
+                <h3>Recent Posts</h3>
+                <!-- Posts will appear here -->
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Paper Tiger Media</p>
+    </footer>
+    <script src="discussion.js"></script>
+</body>
+</html>
