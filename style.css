@@ -32,3 +32,24 @@ footer {
     bottom: 0;
     width: 100%;
 }
+#blog-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.post {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.post h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.post p {
+    margin: 10px 0;
+}
