@@ -160,3 +160,22 @@ footer {
     background-color: #333;
     color: #fff;
 }
+/* About Page Styles */
+#about-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+#about-content h2 {
+    margin-top: 20px;
+    font-size: 1.8rem;
+    color: #333;
+}
+
+#about-content p {
+    margin: 10px 0;
+    font-size: 1rem;
+    color: #555;
+}
