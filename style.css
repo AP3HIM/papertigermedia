@@ -189,7 +189,7 @@ footer {
 }
 
 .article img {
-    width: 150px; /* Adjust as needed */
+    width: 100px; /* Adjust as needed */
     height: auto;
     margin-right: 15px;
     border-radius: 5px; /* Optional: rounded corners */
@@ -197,4 +197,17 @@ footer {
 
 .article-content {
     flex: 1;
+}
+
+.article-container {
+    display: flex;
+    align-items: center; /* Aligns text and image vertically */
+    gap: 15px; /* Adds space between text and image */
+    margin-bottom: 20px; /* Adds spacing between articles */
+}
+
+.article-container img {
+    width: 150px; /* Adjust size as needed */
+    height: auto; /* Keeps the aspect ratio */
+    border-radius: 5px; /* Optional: Rounds the corners slightly */
 }
