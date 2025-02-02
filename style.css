@@ -211,3 +211,31 @@ footer {
     height: auto; /* Keeps the aspect ratio */
     border-radius: 5px; /* Optional: Rounds the corners slightly */
 }
+
+.article-page {
+    background-color: black;
+    color: white;
+    font-family: "Times New Roman", serif;
+    line-height: 1.8;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ensures full screen height */
+}
+
+.article-content {
+    max-width: 700px; /* Limits text width */
+    padding: 30px;
+    text-align: center; /* Centers text */
+}
+
+.article-content h1, 
+.article-content h2 {
+    text-align: center;
+}
+
+.article-content p {
+    text-align: justify; /* Makes paragraphs look neater */
+}
