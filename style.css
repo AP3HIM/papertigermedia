@@ -181,3 +181,20 @@ footer {
     font-size: 1rem;
     color: #555;
 }
+
+.article {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.article img {
+    width: 150px; /* Adjust as needed */
+    height: auto;
+    margin-right: 15px;
+    border-radius: 5px; /* Optional: rounded corners */
+}
+
+.article-content {
+    flex: 1;
+}
