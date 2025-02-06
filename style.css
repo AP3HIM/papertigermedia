@@ -3,7 +3,7 @@ body {
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #ff8c00;     
+    background-color: #ff8c00;    
     padding-bottom: 50px;
 }
 
@@ -34,6 +34,7 @@ footer {
     bottom: 0;
     width: 100%;
 }
+
 #blog-container {
     display: flex;
     flex-direction: column;
@@ -55,7 +56,7 @@ footer {
 .post p {
     margin: 10px 0;
 }
-
+/* Ensure the page takes up the full height and allows scrolling */
 html, body {
     height: 100%;
     margin: 0;
@@ -63,7 +64,7 @@ html, body {
     overflow-y: auto;
 }
 
-
+/* Style for posts to ensure proper spacing */
 .post {
     margin-bottom: 20px;
 }
@@ -71,6 +72,7 @@ html, body {
 #blog-container {
     padding: 15px;
 }
+/* Optional: Customize the scrollbar (only works in modern browsers) */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -108,7 +110,6 @@ form input, form textarea, form button {
     margin-bottom: 10px;
     border-radius: 5px;
     background-color: #f9f9f9;
-}
 }
 #filter-section {
     margin: 20px 0;
@@ -213,29 +214,31 @@ footer {
 }
 
 .article-page {
-    background-color: black;
+    background-color: white;
     color: white;
     font-family: "Times New Roman", serif;
     line-height: 1.8;
     margin: 0;
-    padding: 0;
+    padding: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh; /* Ensures full screen height */
+    overflow-y: auto;
 }
 
 .article-content {
-    max-width: 700px; /* Limits text width */
+    max-width: 800px; /* Limits text width */
     padding: 30px;
-    text-align: center; /* Centers text */
+    text-align: left; /* Centers text * now its left idk lets see /
 }
 
-.article-content h1, 
-.article-content h2 {
-    text-align: center;
-}
+/* .article-content h1,  */
+/* .article-content h2 { */
+/*     text-align: center; */
+/*     margin: 0; */
+/* } */
 
-.article-content p {
-    text-align: justify; /* Makes paragraphs look neater */
-}
+/* .article-content p { */
+/*     text-align: justify; /* Makes paragraphs look neater */ */
+/* } */
