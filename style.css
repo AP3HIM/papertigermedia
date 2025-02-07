@@ -208,8 +208,8 @@ footer {
 }
 
 .article-container img {
-    width: 100px; /* Adjust size as needed */
-    max-width: 100px;
+    width: 60px; /* Adjust size as needed */
+    max-width: 60px;
     height: auto; /* Keeps the aspect ratio */
     object-fit: cover;
     border-radius: 5px; /* Optional: Rounds the corners slightly */
@@ -238,12 +238,19 @@ footer {
     text-align: left; /* Centers text * now its left idk lets see /
 }
 
-/* .article-content h1,  */
-/* .article-content h2 { */
-/*     text-align: center; */
-/*     margin: 0; */
-/* } */
+.article-content h1, 
+.article-content h2 {
+    text-align: center;
+    margin: 0;
+}
 
-/* .article-content p { */
-/*     text-align: justify; /* Makes paragraphs look neater */ */
-/* } */
+.article-content p {
+    text-align: justify; /* Makes paragraphs look neater */
+}
+.article-page header {
+    width: 100%;
+    text-align: center;
+    background-color: #f8f9fa;
+    padding: 20px 0;
+    border-bottom: 2px solid #ddd;
+}
