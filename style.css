@@ -209,28 +209,32 @@ footer {
 
 .article-container img {
     width: 100px; /* Adjust size as needed */
+    max-width: 100px;
     height: auto; /* Keeps the aspect ratio */
+    object-fit: cover;
     border-radius: 5px; /* Optional: Rounds the corners slightly */
     margin-left: 20px;
 }
 
 .article-page {
     background-color: white;
-    color: black;
+    color: white;
     font-family: "Times New Roman", serif;
     line-height: 1.8;
     margin: 0;
     padding: 50px;
     display: flex;
     justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* Ensures full screen height */
+    height: auto;
     overflow-y: auto;
 }
 
 .article-content {
     max-width: 800px; /* Limits text width */
+    width: 100%;
     padding: 30px;
+    background-color: white;
+    color: black;
     text-align: left; /* Centers text * now its left idk lets see /
 }
 
