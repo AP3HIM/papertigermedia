@@ -208,14 +208,15 @@ footer {
 }
 
 .article-container img {
-    width: 150px; /* Adjust size as needed */
+    width: 100px; /* Adjust size as needed */
     height: auto; /* Keeps the aspect ratio */
     border-radius: 5px; /* Optional: Rounds the corners slightly */
+    margin-left: 20px;
 }
 
 .article-page {
     background-color: white;
-    color: white;
+    color: black;
     font-family: "Times New Roman", serif;
     line-height: 1.8;
     margin: 0;
