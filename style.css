@@ -222,8 +222,8 @@ footer {
     font-family: "Times New Roman", serif;
     line-height: 1.8;
     margin: 0;
-    padding: 50px;
-    display: flex;
+    padding: 0px;
+    display: block;
     justify-content: center;
     height: auto;
     overflow-y: auto;
@@ -235,22 +235,13 @@ footer {
     padding: 30px;
     background-color: white;
     color: black;
-    text-align: left; /* Centers text * now its left idk lets see /
+    text-align: left; 
 }
-
-/* .article-content h1,  */
-/* .article-content h2 { */
-/*     text-align: center; */
-/*     margin: 0; */
-/* } */
-
-/* .article-content p { */
-/*     text-align: justify; /* Makes paragraphs look neater */ */
-/* } */
 .article-page header {
     width: 100%;
     text-align: center;
     background-color: black;
     padding: 20px 0;
     border-bottom: 2px solid #ddd;
+    position: relative;
 }
