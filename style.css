@@ -207,6 +207,7 @@ footer {
     margin-bottom: 20px; /* Adds spacing between articles */
     padding: 15px;
     border-radius: 5px;
+    background-color: white;
 }
 
 .article-container img {
