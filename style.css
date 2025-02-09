@@ -231,7 +231,7 @@ footer {
 
 .article-content {
     max-width: 800px; /* Limits text width */
-    margin 0 auto;
+    margin: 0 auto;
     width: 100%;
     padding: 30px;
     background-color: white;
