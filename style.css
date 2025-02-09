@@ -205,6 +205,8 @@ footer {
     align-items: center; /* Aligns text and image vertically */
     gap: 15px; /* Adds space between text and image */
     margin-bottom: 20px; /* Adds spacing between articles */
+    padding: 15px;
+    border-radius: 5px;
 }
 
 .article-container img {
