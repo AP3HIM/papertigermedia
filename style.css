@@ -233,14 +233,14 @@ footer {
 }
 
 .article-content {
-    max-width: 800px; /* Limits text width */
+    max-width: 600px; /* Limits text width */
     padding: 30px;
     background-color: white;
     color: black;
     text-align: justify; 
-    line-height: 1.8;
+    line-height: 2;
     font-size: 18px;
-    margin: 20px auto;
+    margin: 40px auto;
 }
     
 
