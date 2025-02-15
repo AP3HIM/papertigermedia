@@ -234,14 +234,16 @@ footer {
 
 .article-content {
     max-width: 800px; /* Limits text width */
-    margin: 0 auto;
-    width: 100%;
     padding: 30px;
     background-color: white;
     color: black;
-    text-align: left; 
-    
+    text-align: justify; 
+    line-height: 1.8;
+    font-size: 18px;
+    margin: 20px auto;
 }
+    
+
 .article-page header {
     width: 100%;
     text-align: center;
