@@ -201,17 +201,15 @@ footer {
 }
 
 .article-container {
-    display: flex;
-    align-items: center; /* Aligns text and image vertically */
-    gap: 15px; /* Adds space between text and image */
-    margin-bottom: 20px; /* Adds spacing between articles */
-    padding: 15px;
-    border-radius: 5px;
+    display: block; /* Prevents weird flex behavior */
+    max-width: 800px; /* Keeps it the same width as before */
+    width: 100%;
+    padding: 20px;
     background-color: white;
+    border-radius: 8px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto; /* Centers it and keeps spacing */
 }
-   
-  
 
 .article-container img {
     width: 50px; /* Adjust size as needed */
