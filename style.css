@@ -238,14 +238,14 @@ footer {
 /*     padding: 15px; */
     background-color: white;
     color: black;
-    text-align: justify; 
+    text-align: left; 
     line-height: 2;
     font-size: 18px;
     margin: 0 auto;
 }
 
 .article-description {
-    text-align: justify;
+    text-align: left;
     line-height: 2; 
     font-size: 18px;
     color:gray;
