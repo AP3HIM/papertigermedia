@@ -263,3 +263,12 @@ footer {
     position: relative; /* Ensures it stays below content */
     bottom: 0;
 }
+
+.article-content img {
+    max-width: 100%; /* Makes sure images don't overflow */
+    width: auto; /* Keeps original aspect ratio */
+    height: auto; /* Keeps image proportional */
+    display: block; /* Removes any weird spacing */
+    margin: 20px auto; /* Centers the images */
+    border-radius: 8px; /* Optional: adds rounded corners */
+}
