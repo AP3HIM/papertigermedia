@@ -21,7 +21,7 @@ nav a {
 }
 
 main {
-    padding: 20px;
+/*     padding: 20px; */
     min-height: 80vh; /* Ensures the main content takes up most of the page */
 }
 
