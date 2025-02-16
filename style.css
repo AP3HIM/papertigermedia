@@ -249,8 +249,9 @@ footer {
     line-height: 2; 
     font-size: 18px;
     color:gray;
-    width: fit-content;
+    max-width: 600px;
     margin: 0 auto;
+    padding: 20px;
 }
 
 .article-page header {
