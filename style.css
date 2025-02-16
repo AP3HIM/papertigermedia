@@ -285,3 +285,22 @@ footer {
     width: 700px; /* Adjust as needed */
     height: auto;
 }
+.latest-article {
+    max-width: 800px; /* Adjust width as needed */
+    width: 100%;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto; /* Centers it horizontally */
+    text-align: left; /* Aligns text to the left */
+}
+
+.latest-article h2 {
+    font-size: 24px;
+}
+
+.latest-article p {
+    font-size: 18px;
+    color: gray;
+}
