@@ -235,7 +235,7 @@ footer {
 
 .article-content {
     max-width: 600px; /* Limits text width */
-    padding: 30px;
+    padding: 15px;
     background-color: white;
     color: black;
     text-align: justify; 
@@ -245,7 +245,7 @@ footer {
 }
 
 .article-description {
-    text-align: justify;
+    text-align: center;
     line-height: 2; 
     font-size: 18px;
     color:black;
