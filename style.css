@@ -272,3 +272,7 @@ footer {
     margin: 20px auto; /* Centers the images */
     border-radius: 8px; /* Optional: adds rounded corners */
 }
+.bigger-img {
+    width: 700px; /* Adjust as needed */
+    height: auto;
+}
