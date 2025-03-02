@@ -305,7 +305,7 @@ footer {
     color: black;
 }
 
-a {
+.latest-article-title a {
     text-decoration: none;
 }
 
