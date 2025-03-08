@@ -319,6 +319,7 @@ footer {
     height: 100vh; /* Full viewport height */
     margin-bottom: 10px; /* Space below each section */
     border-bottom: 1px solid white; /* White line at the bottom */
+    margin-top: 10px;
   }
 
 .hero-overlay {
@@ -369,8 +370,8 @@ footer {
     width: 100%;
     text-align: center;
     padding: 20px 0;
-    background-color: #191e28;
-    color: #333;
+    background-color: black;
+    color: white;
     margin-top: 20px;
  }
   
