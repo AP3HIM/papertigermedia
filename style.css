@@ -3,7 +3,7 @@ body {
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #ff8c00;    
+    /* background-color: #ff8c00;     */
     padding-bottom: 50px;
 }
 
@@ -349,18 +349,19 @@ footer {
   }
   
 .hero-btn {
-    background-color: #FFA500; /* Blue, or any color that fits your brand */
+    background-color: rgba(255, 165, 0, 0.5); /* Orange with 50% opacity */
     color: white;
     padding: 10px 20px;
-    border: none;
+    border: 2px solid #FFA500; /* Solid orange border */
     border-radius: 20px;
     text-decoration: none;
     font-size: 1.2rem;
     transition: background-color 0.3s;
   }
-  
+
 .hero-btn:hover {
-    background-color: #ff8c00;
+    background-color: rgba(255, 165, 0, 0.9); /* make it slightly more opaque on hover */
+
   }
   
   /* Footer for a consistent look */
@@ -368,7 +369,7 @@ footer {
     width: 100%;
     text-align: center;
     padding: 20px 0;
-    background-color: #f8f8f8;
+    background-color: #191e28;
     color: #333;
     margin-top: 20px;
  }
