@@ -313,7 +313,7 @@ footer {
 /* Hero Section Styles */
 .hero-section {
     position: relative;
-    background-image: url('hero1-background.jpg'); /* Replace with your image path */
+    background-image: url('whitebg2.jpg'); /* Replace with your image path */
     background-size: cover;
     background-position: center;
     height: 100vh; /* Full viewport height */
@@ -345,7 +345,7 @@ footer {
 .hero-overlay p {
     font-size: 1.5rem;
     margin-bottom: 20px;
-    color: black;
+    color: whitesmoke;
   }
   
 .hero-btn {
