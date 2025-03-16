@@ -254,11 +254,11 @@ footer {
 /*     padding: 20px; */
 }
 
-.article-img text{
+.copyright-text {
     text-align: left;
     line-height: 2; 
     font-size: 12px;
-    color:gray;
+    color: gray;
     max-width: 600px;
     margin: 0 auto;
     padding: 0px ;
