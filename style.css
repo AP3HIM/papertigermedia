@@ -254,6 +254,16 @@ footer {
 /*     padding: 20px; */
 }
 
+.article-img text{
+    text-align: left;
+    line-height: 2; 
+    font-size: 12px;
+    color:gray;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0px ;
+}
+
 .article-page header {
     width: 100%;
     text-align: center;
