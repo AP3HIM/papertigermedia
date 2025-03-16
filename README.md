@@ -1,2 +1,2 @@
-# political-blog
-This is the code for my political blog.
+# papertigermedia
+This is the code for my political website, www.papertigersmedia.com.
