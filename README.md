@@ -1,2 +1,2 @@
 # papertigermedia
-This is the code for my sports website, www.papertigersmedia.com.
+This is the code for my sports website, papertigersmedia.com.
