@@ -191,9 +191,10 @@ footer {
 
 .article img {
     width: 100px; /* Adjust as needed */
-    height: auto;
-    margin-right: 15px;
-    border-radius: 5px; /* Optional: rounded corners */
+    height: 100px; /* Ensures uniform height */
+    object-fit: cover; /* Crops instead of stretching */
+    border-radius: 5px;
+    flex-shrink: 0; /* Prevents the image from shrinking in flexbox */
 }
 
 .article-content {
