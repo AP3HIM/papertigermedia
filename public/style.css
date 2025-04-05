@@ -1,0 +1,201 @@
+body {
+    font-family: "Times New Roman", sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #ff8c00;    
+    padding-bottom: 50px;
+}
+
+header {
+    background: #333;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+nav a {
+    color: #fff;
+    margin: 0 15px;
+    text-decoration: none;
+}
+
+main {
+    padding: 20px;
+    min-height: 80vh; /* Ensures the main content takes up most of the page */
+}
+
+footer {
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+#blog-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.post {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.post h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.post p {
+    margin: 10px 0;
+}
+/* Ensure the page takes up the full height and allows scrolling */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+}
+
+/* Style for posts to ensure proper spacing */
+.post {
+    margin-bottom: 20px;
+}
+
+#blog-container {
+    padding: 15px;
+}
+/* Optional: Customize the scrollbar (only works in modern browsers) */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+#discussion-board {
+    padding: 20px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+form label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+form input, form textarea, form button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.post {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+#filter-section {
+    margin: 20px 0;
+    text-align: center; /* Center-align the dropdown */
+}
+
+#category {
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+#articles {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; /* Space between articles */
+    padding: 20px;
+}
+
+.article {
+    width: 80%; /* Limit article width */
+    max-width: 800px; /* Prevent it from getting too wide */
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+.article h3 {
+    margin: 0 0 10px;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.article p {
+    margin: 0;
+    font-size: 1rem;
+    color: #555;
+}
+.article:hover {
+    background-color: #f0f8ff;
+    border-color: #007bff;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+footer {
+    margin-top: 40px;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #333;
+    color: #fff;
+}
+/* About Page Styles */
+#about-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+#about-content h2 {
+    margin-top: 20px;
+    font-size: 1.8rem;
+    color: #333;
+}
+
+#about-content p {
+    margin: 10px 0;
+    font-size: 1rem;
+    color: #555;
+}
+
+.article {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.article img {
+    width: 150px; /* Adjust as needed */
+    height: auto;
+    margin-right: 15px;
+    border-radius: 5px; /* Optional: rounded corners */
+}
+
+.article-content {
+    flex: 1;
+}
