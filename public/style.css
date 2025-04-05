@@ -1,9 +1,10 @@
+
 body {
-    font-family: "Times New Roman", sans-serif;
+    font-family: 'Lato', sans-serif;
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #ff8c00;    
+    /* background-color: #ff8c00;     */
     padding-bottom: 50px;
 }
 
@@ -21,7 +22,7 @@ nav a {
 }
 
 main {
-    padding: 20px;
+/*     padding: 20px; */
     min-height: 80vh; /* Ensures the main content takes up most of the page */
 }
 
@@ -190,15 +191,17 @@ footer {
 }
 
 .article img {
-    width: 150px; /* Adjust as needed */
-    height: auto;
-    margin-right: 15px;
-    border-radius: 5px; /* Optional: rounded corners */
+    width: 100px; /* Adjust as needed */
+    height: 100px; /* Ensures uniform height */
+    object-fit: cover; /* Crops instead of stretching */
+    border-radius: 5px;
+    flex-shrink: 0; /* Prevents the image from shrinking in flexbox */
 }
 
 .article-content {
     flex: 1;
 }
+
 .article-container {
     display: block; /* Prevents weird flex behavior */
     max-width: 800px; /* Keeps it the same width as before */
@@ -383,4 +386,3 @@ footer {
     color: white;
     margin-top: 20px;
  }
-
