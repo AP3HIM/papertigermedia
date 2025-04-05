@@ -7,19 +7,18 @@
     <loc>https://papertigersmedia.com/about.html</loc>
   </url>
   <url>
-    <loc>https://papertigersmedia.com/newarticles.html</loc>
-  </url>
-  <!-- Add more URLs here -->
-  <url>
-    <loc>https://papertigersmedia.com/coltssuccess.html</loc>
+    <loc>https://papertigersmedia.com/articles/nfl/newarticles.html</loc>
   </url>
   <url>
-    <loc>https://papertigersmedia.com/nba.html</loc>
+    <loc>https://papertigersmedia.com/articles/nfl/coltssuccess.html</loc>
   </url>
   <url>
-    <loc>https://papertigersmedia.com/tushpush.html</loc>
+    <loc>https://papertigersmedia.com/articles/nba/nba.html</loc>
+  </url>
+  <url>
+    <loc>https://papertigersmedia.com/articles/nfl/tushpush.html</loc>
   </url>
    <url>
-    <loc>https://papertigersmedia.com/warriorslakers.html</loc>
+    <loc>https://papertigersmedia.com/articles//nba/warriorslakers.html</loc>
   </url>
 </urlset>
