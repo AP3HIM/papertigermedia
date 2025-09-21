@@ -31,6 +31,8 @@ html, body {
     padding: 0;
     overflow-y: auto;
 }
+
+
 /* Optional: Customize the scrollbar (only works in modern browsers) */
 ::-webkit-scrollbar {
     width: 8px;
@@ -89,11 +91,11 @@ html, body {
 }
 
 .article img {
-    width: 100px; /* Adjust as needed */
-    height: 100px; /* Ensures uniform height */
-    object-fit: cover; /* Crops instead of stretching */
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
     border-radius: 5px;
-    flex-shrink: 0; /* Prevents the image from shrinking in flexbox */
+    flex-shrink: 0;
 }
 
 .article-content {
@@ -164,12 +166,11 @@ html, body {
 }
 
 .article-content img {
-    max-width: 100%; /* Makes sure images don't overflow */
-    width: auto; /* Keeps original aspect ratio */
-    height: auto; /* Keeps image proportional */
-    display: block; /* Removes any weird spacing */
-    margin: 20px auto; /* Centers the images */
-    border-radius: 8px; /* Optional: adds rounded corners */
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 20px auto; /* Centers horizontally */
+    border-radius: 8px;
 }
 
 .latest-article {
