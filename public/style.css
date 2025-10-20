@@ -252,12 +252,100 @@ html, body {
 
   }
   
-  /* Footer for a consistent look */
+
+ /* ===== Info Pages (Privacy & Contact) ===== */
+.info-page {
+  font-family: 'Lato', sans-serif;
+  background-color: #f9fafb;
+  color: #222;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+.page-header {
+  text-align: center;
+  background-color: #111;
+  color: white;
+  padding: 3rem 1rem;
+}
+
+.page-header h1 {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.page-header .subhead {
+  color: #ccc;
+  font-size: 1rem;
+}
+
+.page-content {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+.page-content h2 {
+  border-left: 4px solid #222;
+  padding-left: 0.5rem;
+  margin-top: 2rem;
+  color: #111;
+}
+
+.page-content a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.page-content a:hover {
+  text-decoration: underline;
+}
+
+.social-links {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+.social-links li {
+  margin-bottom: 0.5rem;
+}
+
+.social-links a {
+  color: #0066cc;
+  font-weight: 700;
+}
+
 footer {
-    width: 100%;
-    text-align: center;
-    padding: 20px 0;
-    background-color: black;
-    color: white;
-    margin-top: 20px;
- }
+  text-align: center;
+  padding: 2rem 1rem;
+  background-color: #111;
+  color: #eee;
+  margin-top: 3rem;
+}
+
+footer a {
+  color: #eee;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+.footer-note {
+  font-size: 0.9em;
+  color: #999;
+  margin-top: 0.5rem;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .page-content {
+    padding: 0 1rem;
+  }
+  .page-header h1 {
+    font-size: 1.8rem;
+  }
+}
