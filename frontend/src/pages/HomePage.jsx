@@ -9,7 +9,7 @@ const MORE = [
     title: "Dynasty",
     subtitle: "Build a multi-season franchise. Live with every decision.",
     status: "muted",
-    label: "IN DEVELOPMENT",
+    label: "LIVE",
   },
   {
     to: "/games/stat-challenge",
@@ -29,8 +29,8 @@ const MORE = [
     to: "/articles",
     title: "Archive",
     subtitle: "Original reporting and analysis, preserved.",
-    status: "muted",
-    label: "PLANNED",
+    status: "active",
+    label: "READ",
   },
 ];
 

@@ -1,0 +1,61 @@
+.ptm-articles-page {
+  padding-top: 3rem;
+  padding-bottom: 5rem;
+}
+.ptm-articles-header {
+  margin-bottom: 3rem;
+  border-bottom: 1px solid #1a1a1a;
+  padding-bottom: 2rem;
+}
+.ptm-articles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+.ptm-article-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: #0a0a0a;
+  padding: 2rem;
+  border-radius: 8px;
+  border: 1px solid #111;
+  transition: border-color 0.2s ease;
+}
+.ptm-article-card:hover {
+  border-color: #222;
+}
+.ptm-article-date {
+  font-size: 0.8rem;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+}
+.ptm-article-card h2 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.6rem;
+  line-height: 1.3;
+}
+.ptm-article-link {
+  color: #fff;
+  text-decoration: none;
+}
+.ptm-article-link:hover {
+  color: #ff4500; /* Or whatever your primary theme tint color is */
+}
+.ptm-article-excerpt {
+  color: #888;
+  line-height: 1.5;
+  margin: 0 0 1.25rem 0;
+  max-width: 700px;
+}
+.ptm-article-more {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-decoration: none;
+}
+.ptm-article-more:hover {
+  text-decoration: underline;
+}

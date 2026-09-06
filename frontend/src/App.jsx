@@ -4,6 +4,10 @@ import HomePage from "./pages/HomePage";
 import GamesIndexPage from "./pages/GamesIndexPage";
 import PlannedPage from "./pages/PlannedPage";
 import TwentyThreeGuessesPage from "./pages/TwentyThreeGuessesPage";
+import DynastyPage from "./pages/DynastyPage";
+
+import ArticlesIndexPage from "./pages/ArticlesIndexPage";
+import ArticleDetailPage from "./pages/ArticleDetailPage";
 
 export default function App() {
   return (
@@ -12,16 +16,7 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/games" element={<GamesIndexPage />} />
         <Route path="/games/23-guesses" element={<TwentyThreeGuessesPage />} />
-        <Route
-          path="/games/dynasty"
-          element={
-            <PlannedPage
-              eyebrow="PLAY"
-              title="Dynasty"
-              blurb="Build a multi-season sports franchise, live with the consequences of every decision, and watch your own history unfold. In active development."
-            />
-          }
-        />
+        <Route path="/games/dynasty" element={<DynastyPage />} />
         <Route
           path="/games/stat-challenge"
           element={
@@ -42,16 +37,10 @@ export default function App() {
             />
           }
         />
-        <Route
-          path="/articles"
-          element={
-            <PlannedPage
-              eyebrow="ARCHIVE"
-              title="Archive"
-              blurb="The original Paper Tigers Media articles, being ported into this rebuild. Planned."
-            />
-          }
-        />
+        
+        <Route path="/articles" element={<ArticlesIndexPage />} />
+        <Route path="/articles/:slug" element={<ArticleDetailPage />} />
+
       </Route>
     </Routes>
   );
