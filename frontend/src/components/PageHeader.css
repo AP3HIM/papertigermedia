@@ -1,0 +1,26 @@
+.ptm-page-header {
+  border-bottom: 1px solid var(--ptm-border);
+  padding: 3.5rem 0;
+  margin-bottom: 3rem;
+}
+
+.ptm-page-header__eyebrow {
+  font-family: var(--ptm-font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  color: var(--ptm-orange);
+  margin: 0 0 0.6rem;
+}
+
+.ptm-page-header__title {
+  font-family: var(--ptm-font-serif);
+  font-size: clamp(2.25rem, 5vw, 3.25rem);
+  margin: 0;
+}
+
+.ptm-page-header__blurb {
+  max-width: 48ch;
+  color: var(--ptm-muted-gray);
+  font-size: 1.05rem;
+  margin: 1rem 0 0;
+}

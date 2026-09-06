@@ -1,0 +1,18 @@
+.ptm-footer {
+  border-top: 1px solid var(--ptm-border);
+  margin-top: 4rem;
+}
+
+.ptm-footer__inner {
+  padding: 1.5rem;
+  font-family: var(--ptm-font-mono);
+  font-size: 0.75rem;
+  color: var(--ptm-muted-gray);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.ptm-footer__social a:hover {
+  color: var(--ptm-black);
+}

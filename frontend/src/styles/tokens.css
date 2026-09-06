@@ -1,0 +1,18 @@
+:root {
+  --ptm-black: #0a0a0a;
+  --ptm-offwhite: #f4f1ea;
+  --ptm-dark-gray: #151515;
+  --ptm-muted-gray: #777777;
+  --ptm-border: #d8d4cb;
+
+  --ptm-orange: #c1440e;
+  --ptm-orange-dark: #9c360a;
+
+  --ptm-font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --ptm-font-serif: Georgia, "Times New Roman", serif;
+  --ptm-font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --ptm-radius: 3px;
+  --ptm-container: 1180px;
+  --ptm-container-narrow: 680px;
+}

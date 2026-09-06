@@ -1,0 +1,22 @@
+.ptm-section-header {
+  margin-bottom: 1.25rem;
+}
+
+.ptm-section-header__eyebrow {
+  font-family: var(--ptm-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--ptm-muted-gray);
+  margin: 0 0 0.35rem;
+}
+
+.ptm-section-header__title {
+  font-family: var(--ptm-font-serif);
+  font-size: 1.6rem;
+  margin: 0;
+}
+
+.ptm-section-header__subtitle {
+  color: var(--ptm-muted-gray);
+  margin: 0.35rem 0 0;
+}
