@@ -6,21 +6,23 @@ from . import engine
 
 
 class NewGameView(APIView):
-    """GET /api/dynasty/new-game/ — bootstraps a fresh dynasty. No
-    persistence: the frontend holds onto everything this returns."""
+    """POST /api/dynasty/new-game/
+    body (optional): { city, team_name }
+    """
 
-    def get(self, request):
-        return Response(engine.new_game())
+    def post(self, request):
+        city = request.data.get("city", "")
+        team_name = request.data.get("team_name", "")
+        return Response(engine.new_game(city=city, team_name=team_name))
 
 
 class AdvanceView(APIView):
     """POST /api/dynasty/advance/
     body: { state, choice_id, chosen_option }
 
-    `chosen_option` is the exact option object the frontend displayed
-    (including its `prospect` scouting profile, for draft/trade choices) —
-    echoed back so the player who joins the roster is the same one shown
-    on the card, not a freshly regenerated one.
+    `chosen_option` is the exact option object the frontend displayed —
+    echoed back (with its `prospect` and/or `depth_signees` data) so
+    whoever joins the roster matches what was shown on the card.
     """
 
     def post(self, request):
@@ -28,6 +30,7 @@ class AdvanceView(APIView):
         choice_id = request.data.get("choice_id")
         chosen_option = request.data.get("chosen_option") or {}
         prospect = chosen_option.get("prospect")
+        depth_signees = chosen_option.get("depth_signees")
 
         if not state or not choice_id:
             return Response(
@@ -36,7 +39,9 @@ class AdvanceView(APIView):
             )
 
         try:
-            result = engine.advance_dynasty(state, choice_id, prospect=prospect)
+            result = engine.advance_dynasty(
+                state, choice_id, prospect=prospect, depth_signees=depth_signees
+            )
         except (KeyError, StopIteration, TypeError, ValueError) as exc:
             return Response(
                 {"detail": f"Couldn't advance the dynasty: {exc}"},

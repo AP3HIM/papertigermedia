@@ -9,12 +9,12 @@ class Command(BaseCommand):
     help = "Simulate a full 10-season Dynasty run with random decisions and print the results."
 
     def handle(self, *args, **options):
-        game = engine.new_game()
+        game = engine.new_game(city="Testville", team_name="Testers")
         state = game["state"]
         decision = game["decision"]
 
-        self.stdout.write(self.style.SUCCESS("=== NEW DYNASTY ==="))
-        self.stdout.write("Last season: 18-65. You have the No. 1 pick.\n")
+        self.stdout.write(self.style.SUCCESS(f"=== NEW DYNASTY: {state['city']} {state['team_name']} ==="))
+        self.stdout.write("You have the No. 1 pick.\n")
 
         result = None
         while decision is not None:
@@ -26,13 +26,16 @@ class Command(BaseCommand):
             pick_line = f" [pick #{decision['pick_number']}]" if decision.get("pick_number") else ""
             self.stdout.write(f"Season {decision['season_number']}{pick_line} decision: {label}")
 
-            result = engine.advance_dynasty(state, choice["id"], prospect=choice.get("prospect"))
+            result = engine.advance_dynasty(
+                state, choice["id"], prospect=choice.get("prospect"), depth_signees=choice.get("depth_signees")
+            )
             state = result["state"]
             season_result = result["season_result"]
 
             self.stdout.write(
                 f"  -> {season_result['wins']}-{season_result['losses']} "
-                f"({season_result['result']}) [team rating {season_result['team_rating']}]"
+                f"({season_result['result']}) [rating {season_result['team_rating']}, "
+                f"fan support {season_result['fan_support']}]"
             )
             for note in season_result["notes"]:
                 self.stdout.write(f"     - {note}")
@@ -54,5 +57,6 @@ class Command(BaseCommand):
             self.stdout.write(f"Season {h['season_number']}: {h['wins']}-{h['losses']} — {h['result']}{champ}")
 
         self.stdout.write(f"\nLongest championship streak: {state['max_streak']}")
+        self.stdout.write(f"Final fan support: {state['fan_support']}")
         if state["max_streak"] >= 3:
             self.stdout.write(self.style.SUCCESS("YOU BUILT A 3-PEAT DYNASTY!"))
