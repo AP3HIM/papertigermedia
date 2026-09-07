@@ -8,13 +8,24 @@ function closingLine(championships, threePeat) {
   return "No rings this time. Some rebuilds just take longer.";
 }
 
-export default function RetrospectiveScreen({ history, roster, depthRating, maxStreak, threePeat, onRestart }) {
+export default function RetrospectiveScreen({
+  city,
+  teamName,
+  history,
+  roster,
+  depthRating,
+  maxStreak,
+  threePeat,
+  onRestart,
+}) {
   const championships = history.filter((h) => h.champion).length;
 
   return (
     <div className="ptm-dynasty">
       <p className="ptm-dynasty__eyebrow">TEN SEASONS</p>
-      <h1 className="ptm-dynasty__title">Here's your dynasty.</h1>
+      <h1 className="ptm-dynasty__title">
+        {city} {teamName}
+      </h1>
 
       {threePeat && <p className="ptm-dynasty__three-peat">YOU BUILT A 3-PEAT.</p>}
 

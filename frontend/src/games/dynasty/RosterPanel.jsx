@@ -10,7 +10,7 @@ export default function RosterPanel({ roster, depthRating }) {
               <>
                 <div className="ptm-roster__player-top">
                   <span className="ptm-roster__player-name">{slot.player.name}</span>
-                  <span className="ptm-roster__player-ovr">{slot.player.ovr}</span>
+                  <span className="ptm-roster__player-ovr-badge">{slot.player.ovr}</span>
                 </div>
                 <p className="ptm-roster__player-meta">
                   {slot.player.position} · {slot.player.height} · {slot.player.weight} lbs · Age{" "}
@@ -32,8 +32,11 @@ export default function RosterPanel({ roster, depthRating }) {
       </div>
 
       <div className="ptm-roster__bench">
-        <span>Bench</span>
-        <span>{depthRating} depth</span>
+        <span>Bench Depth</span>
+        <span>
+          {depthRating}
+          <span className="ptm-roster__bench-note"> (not a player rating)</span>
+        </span>
       </div>
     </div>
   );

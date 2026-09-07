@@ -20,7 +20,7 @@ const PHASE = {
 
 export default function DynastyGame() {
   const [phase, setPhase] = useState(PHASE.INTRO);
-  const [gameState, setGameState] = useState(null); // opaque state blob owned by the backend
+  const [gameState, setGameState] = useState(null);
   const [decision, setDecision] = useState(null);
   const [seasonResult, setSeasonResult] = useState(null);
   const [threePeat, setThreePeat] = useState(false);
@@ -39,9 +39,9 @@ export default function DynastyGame() {
     }
   }, []);
 
-  async function handleStart() {
+  async function handleStart(city, teamName) {
     try {
-      const data = await newDynastyGame();
+      const data = await newDynastyGame({ city, teamName });
       setGameState(data.state);
       setDecision(data.decision);
       setSeasonResult(null);
@@ -100,14 +100,7 @@ export default function DynastyGame() {
     if (nextPhase === PHASE.COMPLETE) {
       clearSave();
     } else {
-      writeSave({
-        phase: nextPhase,
-        gameState,
-        decision,
-        seasonResult,
-        threePeat,
-        gameOverPending,
-      });
+      writeSave({ phase: nextPhase, gameState, decision, seasonResult, threePeat, gameOverPending });
     }
   }
 
@@ -144,8 +137,11 @@ export default function DynastyGame() {
   if (phase === PHASE.DECIDING) {
     return (
       <DecisionScreen
+        city={gameState.city}
+        teamName={gameState.team_name}
         seasonNumber={decision.season_number}
         totalSeasons={TOTAL_SEASONS}
+        fanSupport={gameState.fan_support}
         pickNumber={decision.pick_number}
         options={decision.options}
         onChoose={handleChoice}
@@ -159,8 +155,10 @@ export default function DynastyGame() {
   if (phase === PHASE.RESULT) {
     return (
       <SeasonResultScreen
-        result={seasonResult}
+        city={gameState.city}
+        teamName={gameState.team_name}
         totalSeasons={TOTAL_SEASONS}
+        result={seasonResult}
         onContinue={handleContinue}
         roster={gameState.roster}
         depthRating={gameState.depth_rating}
@@ -171,6 +169,8 @@ export default function DynastyGame() {
   if (phase === PHASE.COMPLETE) {
     return (
       <RetrospectiveScreen
+        city={gameState.city}
+        teamName={gameState.team_name}
         history={gameState.history}
         roster={gameState.roster}
         depthRating={gameState.depth_rating}

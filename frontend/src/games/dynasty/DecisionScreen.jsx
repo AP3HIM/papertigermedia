@@ -1,8 +1,12 @@
+import FranchiseHeader from "./FranchiseHeader";
 import RosterPanel from "./RosterPanel";
 
 export default function DecisionScreen({
+  city,
+  teamName,
   seasonNumber,
   totalSeasons,
+  fanSupport,
   pickNumber,
   options,
   onChoose,
@@ -10,15 +14,17 @@ export default function DecisionScreen({
   roster,
   depthRating,
 }) {
-  const isDraft = options.some((o) => o.prospect);
+  const isDraft = options.some((o) => o.prospect && o.type !== "trade_up");
 
   return (
     <div className="ptm-dynasty">
-      <div className="ptm-dynasty__meta">
-        <span>
-          SEASON {seasonNumber} OF {totalSeasons}
-        </span>
-      </div>
+      <FranchiseHeader
+        city={city}
+        teamName={teamName}
+        seasonNumber={seasonNumber}
+        totalSeasons={totalSeasons}
+        fanSupport={fanSupport}
+      />
 
       {priorResult && (
         <p className="ptm-dynasty__context">
@@ -46,6 +52,7 @@ export default function DecisionScreen({
                 <p className="ptm-dynasty__option-measurables">
                   {option.prospect.position} · {option.prospect.height} · {option.prospect.weight} lbs ·
                   Age {option.prospect.age}
+                  {option.prospect.accolade ? ` · ${option.prospect.accolade}` : ""}
                 </p>
                 <p className="ptm-dynasty__option-traits">{option.prospect.traits.join(", ")}</p>
               </>

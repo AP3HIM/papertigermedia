@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Button from "../../components/Button";
+import FranchiseHeader from "./FranchiseHeader";
 import RosterPanel from "./RosterPanel";
 
 function useCountUp(target, durationMs = 500) {
@@ -23,20 +24,32 @@ function useCountUp(target, durationMs = 500) {
   return value;
 }
 
-export default function SeasonResultScreen({ result, totalSeasons, onContinue, roster, depthRating }) {
+export default function SeasonResultScreen({
+  city,
+  teamName,
+  totalSeasons,
+  result,
+  onContinue,
+  roster,
+  depthRating,
+}) {
   const wins = useCountUp(result.wins);
   const losses = useCountUp(result.losses);
   const isChampion = result.champion;
 
   return (
     <div className="ptm-dynasty">
-      <div className="ptm-dynasty__meta">
-        <span>
-          SEASON {result.season_number} OF {totalSeasons}
-        </span>
-        <span className="ptm-dynasty__dot">·</span>
+      <FranchiseHeader
+        city={city}
+        teamName={teamName}
+        seasonNumber={result.season_number}
+        totalSeasons={totalSeasons}
+        fanSupport={result.fan_support}
+      />
+
+      <p className="ptm-dynasty__meta">
         <span>TEAM RATING {result.team_rating}</span>
-      </div>
+      </p>
 
       <p className={"ptm-dynasty__record" + (isChampion ? " is-champion" : "")}>
         {wins}–{losses}

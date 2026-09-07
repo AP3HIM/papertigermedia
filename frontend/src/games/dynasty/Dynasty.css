@@ -1,7 +1,7 @@
 .ptm-dynasty {
   max-width: 640px;
   margin: 0 auto;
-  padding: 3rem 1.5rem 4rem;
+  padding: 2.5rem 1.5rem 4rem;
 }
 
 .ptm-dynasty--intro {
@@ -34,16 +34,112 @@
   margin: 0 0 2rem;
 }
 
+.ptm-dynasty__setup {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.ptm-dynasty__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+  min-width: 160px;
+}
+
+.ptm-dynasty__field span {
+  font-family: var(--ptm-font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--ptm-muted-gray);
+}
+
+.ptm-dynasty__field input {
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--ptm-black);
+  border-radius: var(--ptm-radius);
+  background: var(--ptm-offwhite);
+  font-family: var(--ptm-font-serif);
+  font-size: 1.05rem;
+}
+
+.ptm-dynasty__field input:focus {
+  outline: 2px solid var(--ptm-orange);
+  outline-offset: 1px;
+}
+
+/* --- Franchise header --- */
+
+.ptm-franchise-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  border-bottom: 2px solid var(--ptm-black);
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.ptm-franchise-header__name {
+  font-family: var(--ptm-font-serif);
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+.ptm-franchise-header__season {
+  font-family: var(--ptm-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--ptm-muted-gray);
+  margin: 0.2rem 0 0;
+}
+
+/* --- Fan meter --- */
+
+.ptm-fan-meter {
+  min-width: 160px;
+}
+
+.ptm-fan-meter__label {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--ptm-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--ptm-muted-gray);
+  margin-bottom: 0.3rem;
+}
+
+.ptm-fan-meter__track {
+  height: 6px;
+  background: var(--ptm-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.ptm-fan-meter__fill {
+  height: 100%;
+  background: var(--ptm-orange);
+  transition: width 0.4s ease;
+}
+
+.ptm-fan-meter__ticket {
+  font-family: var(--ptm-font-mono);
+  font-size: 0.7rem;
+  color: var(--ptm-muted-gray);
+  margin: 0.3rem 0 0;
+  text-align: right;
+}
+
 .ptm-dynasty__meta {
   font-family: var(--ptm-font-mono);
   font-size: 0.8rem;
   letter-spacing: 0.06em;
   color: var(--ptm-muted-gray);
   margin-bottom: 1.5rem;
-}
-
-.ptm-dynasty__dot {
-  margin: 0 0.4rem;
 }
 
 .ptm-dynasty__context {
@@ -67,6 +163,7 @@
   text-align: left;
   background: var(--ptm-offwhite);
   border: 1px solid var(--ptm-border);
+  border-left: 3px solid var(--ptm-black);
   border-radius: var(--ptm-radius);
   padding: 1.25rem 1.5rem;
   cursor: pointer;
@@ -74,13 +171,15 @@
   flex-direction: column;
   gap: 0.35rem;
   font-family: inherit;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, transform 0.1s ease;
 }
 
 .ptm-dynasty__option:hover,
 .ptm-dynasty__option:focus-visible {
   border-color: var(--ptm-orange);
+  border-left-color: var(--ptm-orange);
   outline: none;
+  transform: translateX(2px);
 }
 
 .ptm-dynasty__option-top {
@@ -251,7 +350,7 @@
 
 .ptm-roster__player-top {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
 }
 
@@ -260,9 +359,15 @@
   font-size: 1.05rem;
 }
 
-.ptm-roster__player-ovr {
+.ptm-roster__player-ovr-badge {
   font-family: var(--ptm-font-mono);
   font-weight: 700;
+  font-size: 0.85rem;
+  border: 1px solid var(--ptm-black);
+  border-radius: var(--ptm-radius);
+  padding: 0.1rem 0.45rem;
+  min-width: 2.2rem;
+  text-align: center;
 }
 
 .ptm-roster__player-meta,
@@ -292,4 +397,8 @@
   font-family: var(--ptm-font-mono);
   font-size: 0.8rem;
   color: var(--ptm-muted-gray);
+}
+
+.ptm-roster__bench-note {
+  font-size: 0.68rem;
 }

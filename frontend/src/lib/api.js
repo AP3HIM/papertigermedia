@@ -31,8 +31,11 @@ export function submitGuess({ puzzleId, guess, clueIndex }) {
   });
 }
 
-export function newDynastyGame() {
-  return request("/dynasty/new-game/");
+export function newDynastyGame({ city, teamName } = {}) {
+  return request("/dynasty/new-game/", {
+    method: "POST",
+    body: JSON.stringify({ city, team_name: teamName }),
+  });
 }
 
 export function advanceDynasty({ state, choiceId, chosenOption }) {
