@@ -30,3 +30,14 @@ export function submitGuess({ puzzleId, guess, clueIndex }) {
     body: JSON.stringify({ puzzle_id: puzzleId, guess, clue_index: clueIndex }),
   });
 }
+
+export function newDynastyGame() {
+  return request("/dynasty/new-game/");
+}
+
+export function advanceDynasty({ state, choiceId, chosenOption }) {
+  return request("/dynasty/advance/", {
+    method: "POST",
+    body: JSON.stringify({ state, choice_id: choiceId, chosen_option: chosenOption }),
+  });
+}

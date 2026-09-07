@@ -12,9 +12,8 @@ const GAMES = [
   {
     to: "/games/dynasty",
     title: "Dynasty",
-    subtitle: "Build a multi-season sports franchise.",
-    status: "muted",
-    label: "IN DEVELOPMENT",
+    subtitle: "Ten seasons. Build an era.",
+    status: "live",
   },
   {
     to: "/games/stat-challenge",
