@@ -45,6 +45,7 @@ export default function SeasonResultScreen({
         seasonNumber={result.season_number}
         totalSeasons={totalSeasons}
         fanSupport={result.fan_support}
+        hotSeat={result.hot_seat}
       />
 
       <p className="ptm-dynasty__meta">
@@ -55,6 +56,15 @@ export default function SeasonResultScreen({
         {wins}–{losses}
       </p>
       <p className={"ptm-dynasty__result-line" + (isChampion ? " is-champion" : "")}>{result.result}</p>
+
+      {isChampion && result.opponent_name && (
+        <div className="ptm-finals-spectacle">
+          <p className="ptm-finals-spectacle__headline">
+            {city} {teamName} defeat the {result.opponent_name}, {result.series_score}.
+          </p>
+          <p className="ptm-finals-spectacle__mvp">FINALS MVP — {result.finals_mvp}</p>
+        </div>
+      )}
 
       {result.notes.length > 0 && (
         <ul className="ptm-dynasty__notes">

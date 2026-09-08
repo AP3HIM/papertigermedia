@@ -7,6 +7,7 @@ export default function DecisionScreen({
   seasonNumber,
   totalSeasons,
   fanSupport,
+  hotSeat,
   pickNumber,
   options,
   onChoose,
@@ -24,6 +25,7 @@ export default function DecisionScreen({
         seasonNumber={seasonNumber}
         totalSeasons={totalSeasons}
         fanSupport={fanSupport}
+        hotSeat={hotSeat}
       />
 
       {priorResult && (

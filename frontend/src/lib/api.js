@@ -44,3 +44,10 @@ export function advanceDynasty({ state, choiceId, chosenOption }) {
     body: JSON.stringify({ state, choice_id: choiceId, chosen_option: chosenOption }),
   });
 }
+
+export function resolveDynastySituation({ state, situationId, choiceId, context }) {
+  return request("/dynasty/resolve-situation/", {
+    method: "POST",
+    body: JSON.stringify({ state, situation_id: situationId, choice_id: choiceId, context }),
+  });
+}

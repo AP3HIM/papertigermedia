@@ -97,10 +97,16 @@
   margin: 0.2rem 0 0;
 }
 
+.ptm-franchise-header__meters {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
 /* --- Fan meter --- */
 
 .ptm-fan-meter {
-  min-width: 160px;
+  min-width: 150px;
 }
 
 .ptm-fan-meter__label {
@@ -132,6 +138,84 @@
   color: var(--ptm-muted-gray);
   margin: 0.3rem 0 0;
   text-align: right;
+}
+
+/* --- Hot seat meter --- */
+
+.ptm-hot-seat-meter {
+  min-width: 150px;
+}
+
+.ptm-hot-seat-meter__label {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--ptm-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--ptm-muted-gray);
+  margin-bottom: 0.3rem;
+}
+
+.ptm-hot-seat-meter__track {
+  height: 6px;
+  background: var(--ptm-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.ptm-hot-seat-meter__fill {
+  height: 100%;
+  background: var(--ptm-black);
+  transition: width 0.4s ease;
+}
+
+.ptm-hot-seat-meter__status {
+  font-family: var(--ptm-font-mono);
+  font-size: 0.7rem;
+  color: var(--ptm-muted-gray);
+  margin: 0.3rem 0 0;
+  text-align: right;
+}
+
+/* --- Situation screen --- */
+
+.ptm-situation__eyebrow {
+  font-family: var(--ptm-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--ptm-orange);
+  margin: 0 0 0.75rem;
+}
+
+.ptm-situation__prompt {
+  font-family: var(--ptm-font-serif);
+  font-size: 1.4rem;
+  line-height: 1.35;
+  max-width: 46ch;
+  margin: 0 0 2rem;
+}
+
+/* --- Finals spectacle --- */
+
+.ptm-finals-spectacle {
+  border-top: 1px solid var(--ptm-border);
+  border-bottom: 1px solid var(--ptm-border);
+  padding: 1.25rem 0;
+  margin: 0 0 2rem;
+}
+
+.ptm-finals-spectacle__headline {
+  font-family: var(--ptm-font-serif);
+  font-size: 1.1rem;
+  margin: 0 0 0.4rem;
+}
+
+.ptm-finals-spectacle__mvp {
+  font-family: var(--ptm-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--ptm-orange);
+  margin: 0;
 }
 
 .ptm-dynasty__meta {

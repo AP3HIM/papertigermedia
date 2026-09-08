@@ -49,3 +49,35 @@ class AdvanceView(APIView):
             )
 
         return Response(result)
+
+
+class ResolveSituationView(APIView):
+    """POST /api/dynasty/resolve-situation/
+    body: { state, situation_id, choice_id, context }
+
+    `context` is the exact context dict the frontend was shown alongside
+    the situation (e.g. {"player_name": "..."}) — echoed back so the
+    resolution matches what was displayed.
+    """
+
+    def post(self, request):
+        state = request.data.get("state")
+        situation_id = request.data.get("situation_id")
+        choice_id = request.data.get("choice_id")
+        context = request.data.get("context") or {}
+
+        if not state or not situation_id or not choice_id:
+            return Response(
+                {"detail": "state, situation_id, and choice_id are required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            result = engine.resolve_situation(state, situation_id, choice_id, context=context)
+        except (KeyError, StopIteration, TypeError, ValueError) as exc:
+            return Response(
+                {"detail": f"Couldn't resolve that situation: {exc}"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        return Response(result)

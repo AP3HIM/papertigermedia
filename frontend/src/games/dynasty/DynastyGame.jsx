@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { advanceDynasty, newDynastyGame } from "../../lib/api";
+import { advanceDynasty, newDynastyGame, resolveDynastySituation } from "../../lib/api";
 import DecisionScreen from "./DecisionScreen";
 import IntroScreen from "./IntroScreen";
 import RetrospectiveScreen from "./RetrospectiveScreen";
 import SeasonResultScreen from "./SeasonResultScreen";
+import SituationScreen from "./SituationScreen";
 import { clearSave, readSave, writeSave } from "./storage";
 import "./Dynasty.css";
 
@@ -14,6 +15,7 @@ const PHASE = {
   DECIDING: "deciding",
   SIMULATING: "simulating",
   RESULT: "result",
+  SITUATION: "situation",
   COMPLETE: "complete",
   ERROR: "error",
 };
@@ -25,6 +27,7 @@ export default function DynastyGame() {
   const [seasonResult, setSeasonResult] = useState(null);
   const [threePeat, setThreePeat] = useState(false);
   const [gameOverPending, setGameOverPending] = useState(false);
+  const [pendingSituation, setPendingSituation] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -35,6 +38,7 @@ export default function DynastyGame() {
       setSeasonResult(saved.seasonResult);
       setThreePeat(saved.threePeat || false);
       setGameOverPending(saved.gameOverPending || false);
+      setPendingSituation(saved.pendingSituation || null);
       setPhase(saved.phase);
     }
   }, []);
@@ -47,6 +51,7 @@ export default function DynastyGame() {
       setSeasonResult(null);
       setThreePeat(false);
       setGameOverPending(false);
+      setPendingSituation(null);
       setPhase(PHASE.DECIDING);
 
       writeSave({
@@ -56,6 +61,7 @@ export default function DynastyGame() {
         seasonResult: null,
         threePeat: false,
         gameOverPending: false,
+        pendingSituation: null,
       });
     } catch (err) {
       setError(err.message || "Couldn't start a new dynasty.");
@@ -77,6 +83,7 @@ export default function DynastyGame() {
       setThreePeat(result.three_peat);
       setDecision(result.next_decision);
       setGameOverPending(result.game_over);
+      setPendingSituation(result.pending_situation || null);
       setPhase(PHASE.RESULT);
 
       writeSave({
@@ -86,6 +93,7 @@ export default function DynastyGame() {
         seasonResult: result.season_result,
         threePeat: result.three_peat,
         gameOverPending: result.game_over,
+        pendingSituation: result.pending_situation || null,
       });
     } catch (err) {
       setError(err.message || "Couldn't simulate that season.");
@@ -93,15 +101,67 @@ export default function DynastyGame() {
     }
   }
 
-  function handleContinue() {
+  function afterResult() {
+    if (pendingSituation) {
+      setPhase(PHASE.SITUATION);
+      writeSave({
+        phase: PHASE.SITUATION,
+        gameState,
+        decision,
+        seasonResult,
+        threePeat,
+        gameOverPending,
+        pendingSituation,
+      });
+      return;
+    }
+
     const nextPhase = gameOverPending ? PHASE.COMPLETE : PHASE.DECIDING;
     setPhase(nextPhase);
 
     if (nextPhase === PHASE.COMPLETE) {
       clearSave();
     } else {
-      writeSave({ phase: nextPhase, gameState, decision, seasonResult, threePeat, gameOverPending });
+      writeSave({ phase: nextPhase, gameState, decision, seasonResult, threePeat, gameOverPending, pendingSituation: null });
     }
+  }
+
+  async function handleSituationChoice(option) {
+    try {
+      const result = await resolveDynastySituation({
+        state: gameState,
+        situationId: pendingSituation.situation_id,
+        choiceId: option.id,
+        context: pendingSituation.context,
+      });
+
+      setGameState(result.state);
+      setPendingSituation(null);
+
+      const nextPhase = gameOverPending ? PHASE.COMPLETE : PHASE.DECIDING;
+      setPhase(nextPhase);
+
+      if (nextPhase === PHASE.COMPLETE) {
+        clearSave();
+      } else {
+        writeSave({
+          phase: nextPhase,
+          gameState: result.state,
+          decision,
+          seasonResult,
+          threePeat,
+          gameOverPending,
+          pendingSituation: null,
+        });
+      }
+    } catch (err) {
+      setError(err.message || "Couldn't resolve that situation.");
+      setPhase(PHASE.ERROR);
+    }
+  }
+
+  function handleContinue() {
+    afterResult();
   }
 
   function handleRestart() {
@@ -111,6 +171,7 @@ export default function DynastyGame() {
     setSeasonResult(null);
     setThreePeat(false);
     setGameOverPending(false);
+    setPendingSituation(null);
     setPhase(PHASE.INTRO);
   }
 
@@ -142,6 +203,7 @@ export default function DynastyGame() {
         seasonNumber={decision.season_number}
         totalSeasons={TOTAL_SEASONS}
         fanSupport={gameState.fan_support}
+        hotSeat={gameState.hot_seat}
         pickNumber={decision.pick_number}
         options={decision.options}
         onChoose={handleChoice}
@@ -162,6 +224,21 @@ export default function DynastyGame() {
         onContinue={handleContinue}
         roster={gameState.roster}
         depthRating={gameState.depth_rating}
+      />
+    );
+  }
+
+  if (phase === PHASE.SITUATION) {
+    return (
+      <SituationScreen
+        city={gameState.city}
+        teamName={gameState.team_name}
+        seasonNumber={seasonResult ? seasonResult.season_number : gameState.season_number}
+        totalSeasons={TOTAL_SEASONS}
+        fanSupport={gameState.fan_support}
+        hotSeat={gameState.hot_seat}
+        situation={pendingSituation}
+        onChoose={handleSituationChoice}
       />
     );
   }

@@ -1,6 +1,7 @@
 import FanMeter from "./FanMeter";
+import HotSeatMeter from "./HotSeatMeter";
 
-export default function FranchiseHeader({ city, teamName, seasonNumber, totalSeasons, fanSupport }) {
+export default function FranchiseHeader({ city, teamName, seasonNumber, totalSeasons, fanSupport, hotSeat }) {
   return (
     <div className="ptm-franchise-header">
       <div>
@@ -11,7 +12,10 @@ export default function FranchiseHeader({ city, teamName, seasonNumber, totalSea
           SEASON {seasonNumber} OF {totalSeasons}
         </p>
       </div>
-      {typeof fanSupport === "number" && <FanMeter value={fanSupport} />}
+      <div className="ptm-franchise-header__meters">
+        {typeof fanSupport === "number" && <FanMeter value={fanSupport} />}
+        {typeof hotSeat === "number" && <HotSeatMeter value={hotSeat} />}
+      </div>
     </div>
   );
 }

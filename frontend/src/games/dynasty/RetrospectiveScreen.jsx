@@ -3,7 +3,8 @@ import RosterPanel from "./RosterPanel";
 
 function closingLine(championships, threePeat) {
   if (threePeat) return "History remembers dynasties. This was one.";
-  if (championships >= 2) return "Two banners — you built something real.";
+  if (championships >= 4) return `${championships} banners — a legitimate dynasty.`;
+  if (championships >= 2) return `${championships} banners — you built something real.`;
   if (championships === 1) return "One banner. Not bad for ten years of work.";
   return "No rings this time. Some rebuilds just take longer.";
 }
