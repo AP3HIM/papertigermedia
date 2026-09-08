@@ -1,0 +1,121 @@
+.ptm-static-page {
+  padding-top: 3rem;
+  padding-bottom: 5rem;
+}
+.ptm-static-header {
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid rgba(10, 10, 10, 0.1);
+  padding-bottom: 1.5rem;
+}
+.ptm-static-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0.5rem 0;
+  color: var(--ptm-black);
+}
+.ptm-static-subtitle {
+  color: var(--ptm-black);
+  opacity: 0.7;
+  font-size: 1.1rem;
+  margin: 0;
+}
+.ptm-static-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  color: var(--ptm-black);
+  line-height: 1.6;
+}
+.ptm-static-content h2 {
+  font-size: 1.3rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: var(--ptm-black);
+}
+.ptm-static-content p {
+  margin: 0;
+  opacity: 0.85;
+}
+.ptm-static-link {
+  text-decoration: underline;
+}
+.ptm-static-link:hover {
+  opacity: 0.8;
+}
+
+/* Contact Form Framework Grid */
+.ptm-contact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+}
+@media (min-width: 768px) {
+  .ptm-contact-grid {
+    grid-template-columns: 3fr 2fr;
+  }
+}
+.ptm-contact-form {
+  background: rgba(10, 10, 10, 0.02);
+  padding: 2rem;
+  border-radius: 6px;
+  border: 1px solid rgba(10, 10, 10, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.ptm-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.ptm-form-group label {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: var(--ptm-black);
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.ptm-form-group input,
+.ptm-form-group textarea {
+  background: #fff;
+  border: 1px solid rgba(10, 10, 10, 0.15);
+  padding: 0.65rem 0.85rem;
+  color: var(--ptm-black);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color 0.15s ease;
+}
+.ptm-form-group input:focus,
+.ptm-form-group textarea:focus {
+  outline: none;
+  border-color: var(--ptm-black);
+}
+.ptm-contact-sidebar {
+  line-height: 1.6;
+}
+.ptm-contact-sidebar h3 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-size: 1.4rem;
+}
+.ptm-contact-sidebar p {
+  opacity: 0.8;
+  margin-bottom: 1rem;
+}
+.ptm-social-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.ptm-social-links a {
+  font-weight: bold;
+  text-decoration: underline;
+}
+.ptm-social-links a:hover {
+  opacity: 0.7;
+}
