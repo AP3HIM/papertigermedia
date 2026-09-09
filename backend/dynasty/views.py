@@ -7,41 +7,42 @@ from . import engine
 
 class NewGameView(APIView):
     """POST /api/dynasty/new-game/
-    body (optional): { city, team_name }
+    body (optional): { city, team_name, philosophy }
+
+    `philosophy` is one of: win_now, development, small_market, superteam.
+    Defaults to win_now if omitted or unrecognized.
     """
 
     def post(self, request):
         city = request.data.get("city", "")
         team_name = request.data.get("team_name", "")
-        return Response(engine.new_game(city=city, team_name=team_name))
+        philosophy = request.data.get("philosophy", "win_now")
+        return Response(engine.new_game(city=city, team_name=team_name, philosophy=philosophy))
 
 
 class AdvanceView(APIView):
     """POST /api/dynasty/advance/
-    body: { state, choice_id, chosen_option }
+    body: { state, choices }
 
-    `chosen_option` is the exact option object the frontend displayed —
-    echoed back (with its `prospect` and/or `depth_signees` data) so
-    whoever joins the roster matches what was shown on the card.
+    `choices` is a list of 0+ option objects the frontend displayed and
+    the player picked this offseason (e.g. one draft option + one or more
+    free-agent options + a trade offer). Each is echoed back exactly as
+    shown — with its `prospect`, `depth_signees`, and/or `trade_give_slot`
+    data — so whoever joins/leaves the roster matches what was on the card.
     """
 
     def post(self, request):
         state = request.data.get("state")
-        choice_id = request.data.get("choice_id")
-        chosen_option = request.data.get("chosen_option") or {}
-        prospect = chosen_option.get("prospect")
-        depth_signees = chosen_option.get("depth_signees")
+        choices = request.data.get("choices")
 
-        if not state or not choice_id:
+        if not state:
             return Response(
-                {"detail": "state and choice_id are required."},
+                {"detail": "state is required."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         try:
-            result = engine.advance_dynasty(
-                state, choice_id, prospect=prospect, depth_signees=depth_signees
-            )
+            result = engine.advance_dynasty(state, choices)
         except (KeyError, StopIteration, TypeError, ValueError) as exc:
             return Response(
                 {"detail": f"Couldn't advance the dynasty: {exc}"},

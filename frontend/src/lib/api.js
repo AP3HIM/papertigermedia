@@ -31,17 +31,17 @@ export function submitGuess({ puzzleId, guess, clueIndex }) {
   });
 }
 
-export function newDynastyGame({ city, teamName } = {}) {
+export function newDynastyGame({ city, teamName, philosophy } = {}) {
   return request("/dynasty/new-game/", {
     method: "POST",
-    body: JSON.stringify({ city, team_name: teamName }),
+    body: JSON.stringify({ city, team_name: teamName, philosophy }),
   });
 }
 
-export function advanceDynasty({ state, choiceId, chosenOption }) {
+export function advanceDynasty({ state, choices }) {
   return request("/dynasty/advance/", {
     method: "POST",
-    body: JSON.stringify({ state, choice_id: choiceId, chosen_option: chosenOption }),
+    body: JSON.stringify({ state, choices }),
   });
 }
 

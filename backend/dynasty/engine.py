@@ -1,12 +1,12 @@
 """Dynasty simulation engine.
 
-Deliberately stateless. v5 adds: a post-season Situations system (2-choice
-events with real meter consequences, drawn from an expandable pool covering
-everything from a donut named after your PG to an FBI raid on your
-facility), a Hot Seat meter tracking GM job security separate from public
-Fan Support, positions actually mattering (redundant-position rosters take
-a real rating hit), and a Finals spectacle — a named opponent, a real
-series score, and a Finals MVP pulled from your actual roster.
+Deliberately stateless. v6 adds: a salary cap with real contracts, an
+expanded draft (more archetypes + draft classes with their own
+personality), free agency and contextual trade offers folded into the
+existing offseason-options screen, and a front-office philosophy picked
+at game start that nudges a few numbers throughout the run. Builds on v5
+(post-season Situations system, Hot Seat meter, positions mattering,
+Finals spectacle).
 """
 
 import datetime
@@ -65,7 +65,7 @@ TRAIT_POOL = [
 ]
 STAR_ACCOLADES = [
     "Former MVP", "2x All-Star", "3x All-NBA", "Former DPOY",
-    "5x All-Star", "Scoring Champion","Certified Bucket Getter", "Former Finals MVP", 
+    "5x All-Star", "Scoring Champion", "Certified Bucket Getter", "Former Finals MVP",
 ]
 
 POSITIONS = ["PG", "SG", "SF", "PF", "C"]
@@ -82,7 +82,6 @@ PLAYOFF_ROUNDS = ["Round 1", "Round 2", "Conference Finals", "Finals"]
 PLAYOFF_WIN_THRESHOLD = 42
 TOTAL_SEASONS = 10
 TOP_LOTTERY_CUTOFF = 4
-SITUATION_CHANCE = 0.5
 
 # Redundant positions are a real cost now — stacking 4 centers is a build,
 # not a shortcut. A single backup at the same spot is normal roster
@@ -90,6 +89,74 @@ SITUATION_CHANCE = 0.5
 POSITION_FULL_COVERAGE_BONUS = 2
 POSITION_STACK_THRESHOLD = 3
 POSITION_STACK_PENALTY_PER_PLAYER = 4
+
+# --- Salary cap -------------------------------------------------------
+SALARY_CAP = 140.0  # $M, soft — going over just eats your cap space
+
+def salary_for_ovr(ovr):
+    """Anchor points so a superstar costs real money and a bench guy
+    costs almost nothing, with a little noise per player. Figures in $M."""
+    anchors = [(55, 2.5), (65, 6), (75, 12), (82, 20), (88, 30), (94, 42), (99, 48)]
+    if ovr <= anchors[0][0]:
+        base = anchors[0][1]
+    elif ovr >= anchors[-1][0]:
+        base = anchors[-1][1]
+    else:
+        base = anchors[-1][1]
+        for (lo_ovr, lo_sal), (hi_ovr, hi_sal) in zip(anchors, anchors[1:]):
+            if lo_ovr <= ovr <= hi_ovr:
+                t = (ovr - lo_ovr) / (hi_ovr - lo_ovr)
+                base = lo_sal + t * (hi_sal - lo_sal)
+                break
+    return round(base * random.uniform(0.9, 1.1), 1)
+
+
+def bench_salary_allocation(depth_rating):
+    """Depth isn't modeled player-by-player, so its cap hit is
+    approximated off the single depth_rating number."""
+    return round(6 + (depth_rating / 99) * 24, 1)
+
+
+def team_salary(roster, depth_rating):
+    core = sum(s["player"].get("salary", 0) for s in roster if s["player"])
+    return round(core + bench_salary_allocation(depth_rating), 1)
+
+
+def cap_space(roster, depth_rating):
+    return round(SALARY_CAP - team_salary(roster, depth_rating), 1)
+
+
+# --- Front office philosophy -------------------------------------------
+FRONT_OFFICE_PHILOSOPHIES = {
+    "win_now": {
+        "label": "WIN NOW",
+        "note": "Veteran development, free agents prefer you \u2014 older players decline faster.",
+        "dev_age_ceiling_delta": 3,
+        "decline_age_start_delta": -2,
+        "fa_discount": 0.9,
+        "chase_a_star_success_delta": 0.0,
+    },
+    "development": {
+        "label": "DEVELOPMENT",
+        "note": "Young players improve faster \u2014 veterans are less interested in joining.",
+        "young_dev_multiplier": 1.5,
+        "fa_discount": 1.1,
+        "chase_a_star_success_delta": -0.05,
+    },
+    "small_market": {
+        "label": "SMALL MARKET",
+        "note": "Cheap players develop better, draft picks matter more \u2014 stars are harder to keep.",
+        "cheap_dev_bonus": True,
+        "draft_class_ovr_bonus": 2,
+        "chase_a_star_success_delta": -0.1,
+    },
+    "superteam": {
+        "label": "SUPERTEAM",
+        "note": "Stars are more likely to join you \u2014 the cap pressure is real.",
+        "chase_a_star_success_delta": 0.2,
+        "fa_discount": 0.85,
+    },
+}
 
 PLAYOFF_FLAVOR = [
     "Ticket prices creep up. Nobody's complaining yet.",
@@ -126,7 +193,8 @@ BAD_FLAVOR = [
 OPPONENT_CITIES = [
     "Moscow", "Libjuana", "Basel", "Tundra City", "Port Halloway",
     "New Cascadia", "Redstone", "Vantage", "Ashport", "Cobalt Bay",
-    "Glasswing", "Hartford Falls", "Northgate", "Silvermine", "Eastpoint", "Quicksilver", "Ironwood", "Frosthaven", "Shadowport", "Rivermouth",
+    "Glasswing", "Hartford Falls", "Northgate", "Silvermine", "Eastpoint",
+    "Quicksilver", "Ironwood", "Frosthaven", "Shadowport", "Rivermouth",
 ]
 OPPONENT_NICKNAMES = [
     "Cows", "Laptops", "Wolves", "Ironclads", "Marauders", "Static",
@@ -177,7 +245,7 @@ def generate_prospect_profile():
     }
 
 
-def make_player(ovr, age, potential=None, profile=None, origin=""):
+def make_player(ovr, age, potential=None, profile=None, origin="", salary=None):
     profile = profile or generate_prospect_profile()
     return {
         "name": profile["name"],
@@ -190,6 +258,7 @@ def make_player(ovr, age, potential=None, profile=None, origin=""):
         "potential": potential if potential is not None else min(99, ovr + random.randint(0, 12)),
         "origin": origin,
         "injury_note": None,
+        "salary": salary if salary is not None else salary_for_ovr(ovr),
     }
 
 
@@ -245,10 +314,73 @@ DRAFT_ARCHETYPES = [
         "id": "boom_bust",
         "label": "The Boom-or-Bust Swing",
         "blurb": "Scouts are split. Could be a franchise piece — could be out of the league in three years.",
-        "ovr_range": (58, 92),
-        "potential_bonus_range": (0, 20),
+        "ovr_range": (60, 88),
+        "potential_bonus_range": (0, 16),
+    },
+    {
+        "id": "international",
+        "label": "The International Mystery",
+        "blurb": "Big overseas numbers, thin scouting reports. Nobody's totally sure what "
+        "translates to the NBA.",
+        "ovr_range": (62, 90), "potential_bonus_range": (0, 18),
+    },
+    {
+        "id": "old_man_knees",
+        "label": "Old Man Knees, High Potential",
+        "blurb": "Freak talent, but he already moves like a 30-year-old. Either a steal or a "
+        "medical redshirt.",
+        "ovr_range": (65, 80), "potential_bonus_range": (8, 16),
+    },
+    {
+        "id": "acl_recovery",
+        "label": "Coming Off an ACL Tear",
+        "blurb": "Would've been a lottery lock healthy. Falls in the draft purely on the knee.",
+        "ovr_range": (55, 70), "potential_bonus_range": (10, 18),
+    },
+    {
+        "id": "aging_high_iq",
+        "label": "The 23-Year-Old Rookie",
+        "blurb": "Four years overseas or in a weird league. Ready to contribute now, not much "
+        "runway left to grow.",
+        "ovr_range": (70, 80), "potential_bonus_range": (0, 3),
     },
 ]
+
+DRAFT_CLASSES = {
+    "generational": {
+        "label": "THE GENERATIONAL CLASS",
+        "note": "Scouts won't shut up about one name in this class.",
+        "ovr_bonus": 8,
+    },
+    "deep": {
+        "label": "THE DEEP CLASS",
+        "note": "No superstar, but the floor on every prospect is higher than usual.",
+        "ovr_bonus": 3,
+    },
+    "weak": {
+        "label": "THE WEAK CLASS",
+        "note": "Scouts are already calling this one a bust year.",
+        "ovr_bonus": -6,
+    },
+    "guard_heavy": {
+        "label": "THE GUARD CLASS",
+        "note": "Loaded at point guard and shooting guard. Thin everywhere else.",
+        "ovr_bonus": 0,
+        "position_bias": ["PG", "SG"],
+    },
+    "big_man": {
+        "label": "THE BIG MAN CLASS",
+        "note": "A rare year where the best prospects are all up front.",
+        "ovr_bonus": 0,
+        "position_bias": ["PF", "C"],
+    },
+}
+
+
+def roll_draft_class():
+    weights = {"generational": 1, "deep": 3, "weak": 3, "guard_heavy": 2, "big_man": 2}
+    ids = list(weights.keys())
+    return random.choices(ids, weights=[weights[i] for i in ids])[0]
 
 
 def _missing_position(roster):
@@ -268,25 +400,33 @@ def compute_lottery_pick(wins):
     return max(1, min(14, pick))
 
 
-def generate_draft_options(pick_number, roster=None):
+def generate_draft_options(pick_number, roster=None, draft_class=None, philosophy=None):
     draft_year = datetime.date.today().year
     archetypes = DRAFT_ARCHETYPES if pick_number <= TOP_LOTTERY_CUTOFF else [
         a for a in DRAFT_ARCHETYPES if a["id"] != "boom_bust"
     ]
+    class_info = DRAFT_CLASSES.get(draft_class, {})
+    phil_info = FRONT_OFFICE_PHILOSOPHIES.get(philosophy, {})
     need = _missing_position(roster) if roster else None
+    position_bias = class_info.get("position_bias")
+    ovr_bonus = class_info.get("ovr_bonus", 0) + phil_info.get("draft_class_ovr_bonus", 0)
 
     options = []
     for arch in archetypes:
         profile = generate_prospect_profile()
-        # Bias one archetype's prospect toward the team's positional need
-        # so filling the gap isn't a total coin flip.
-        if need and random.random() < 0.6:
-            profile["position"] = need
-            body = POSITION_BODY_RANGES[need]
+        target_pos = None
+        if position_bias and random.random() < 0.5:
+            target_pos = random.choice(position_bias)
+        elif need and random.random() < 0.6:
+            target_pos = need
+        if target_pos:
+            profile["position"] = target_pos
+            body = POSITION_BODY_RANGES[target_pos]
             profile["height"] = format_height(random.randint(*body["height_in"]))
             profile["weight"] = random.randint(*body["weight_lb"])
         profile["age"] = random.randint(19, 22)
         profile["origin"] = f"{draft_year} \u00b7 R1 Pick {pick_number}"
+        profile["draft_class_ovr_bonus"] = ovr_bonus
         options.append({
             "id": arch["id"], "type": "draft", "label": arch["label"], "blurb": arch["blurb"],
             "prospect": profile,
@@ -321,10 +461,97 @@ def _build_chase_a_star_option():
     }
 
 
-def generate_offseason_options(made_playoffs, wins, roster):
+def generate_free_agent_options(cap_space_amount, philosophy=None):
+    """0-3 offers, filtered to what you can actually afford — the tension
+    comes from watching your cap space shrink as you consider one, not
+    from being shown deals you can never take."""
+    if cap_space_amount < 3:
+        return []
+
+    phil_info = FRONT_OFFICE_PHILOSOPHIES.get(philosophy, {})
+    discount = phil_info.get("fa_discount", 1.0)
+
+    count = 1 if cap_space_amount < 12 else (2 if cap_space_amount < 25 else 3)
+    options = []
+    used_ovrs = set()
+    for _ in range(count):
+        ovr = random.randint(58, min(92, 60 + int(cap_space_amount)))
+        for _try in range(6):
+            if ovr not in used_ovrs:
+                break
+            ovr = random.randint(58, min(92, 60 + int(cap_space_amount)))
+        used_ovrs.add(ovr)
+
+        profile = generate_prospect_profile()
+        age = random.randint(23, 33)
+        salary = round(salary_for_ovr(ovr) * discount, 1)
+        if salary > cap_space_amount:
+            salary = round(cap_space_amount * random.uniform(0.7, 0.95), 1)
+        years = random.choice([1, 2, 3, 4])
+        profile["age"] = age
+        profile["origin"] = "Free Agency"
+        options.append({
+            "id": f"sign_fa_{len(options)}", "type": "free_agent",
+            "label": f"Sign {profile['name']}",
+            "blurb": f"{ovr} OVR {profile['position']} \u00b7 asking ${salary}M / {years}"
+            f" yr{'s' if years > 1 else ''}.",
+            "prospect": {**profile, "ovr_hint": ovr},
+        })
+    return options
+
+
+def generate_trade_offer(roster, contending):
+    """One contextual offer per offseason. Contenders get offered aging
+    vets or picks for a bench piece; rebuilders get offered young players
+    for their best trade chip. Value swings both ways — most offers are
+    close to a fair trade, with the odd genuinely good or bad one, rather
+    than a fixed haircut every time."""
+    filled = [s for s in roster if s["player"]]
+    if not filled:
+        return None
+
+    if contending:
+        give = min(filled, key=lambda s: s["player"]["ovr"])
+        give_ovr = give["player"]["ovr"]
+        incoming_ovr = max(40, min(99, give_ovr + random.randint(-8, 6)))
+        flavor = "is interested in your bench piece for a proven vet who can help right now."
+        incoming_age = random.randint(29, 35)
+    else:
+        give = max(filled, key=lambda s: s["player"]["ovr"])
+        give_ovr = give["player"]["ovr"]
+        incoming_ovr = max(40, min(99, give_ovr + random.randint(-12, 4)))
+        flavor = "wants your veteran for a young player who fits a rebuild timeline."
+        incoming_age = random.randint(21, 26)
+
+    suitor = random_team_name()
+    incoming_profile = generate_prospect_profile()
+    incoming_profile["age"] = incoming_age
+    incoming_player = make_player(
+        ovr=incoming_ovr, age=incoming_age, profile=incoming_profile, origin="Trade"
+    )
+
+    return {
+        "id": "accept_trade_offer",
+        "type": "trade_offer",
+        "label": f"Accept the {suitor} Offer",
+        "blurb": f"The {suitor} {flavor} You receive: {incoming_player['name']} "
+        f"({incoming_ovr} OVR {incoming_player['position']}). They receive: {give['player']['name']}.",
+        "trade_give_slot": give["slot"],
+        "prospect": incoming_player,
+    }
+
+
+def generate_offseason_options(made_playoffs, wins, roster, depth_rating=40, draft_class=None, philosophy=None):
+    space = cap_space(roster, depth_rating)
+    trade_offer = generate_trade_offer(roster, contending=made_playoffs)
+
     if not made_playoffs:
         pick_number = compute_lottery_pick(wins)
-        return {"pick_number": pick_number, "options": generate_draft_options(pick_number, roster)}
+        options = generate_draft_options(pick_number, roster, draft_class, philosophy)
+        options += generate_free_agent_options(space, philosophy)
+        if trade_offer:
+            options.append(trade_offer)
+        return {"pick_number": pick_number, "options": options}
 
     best = max((s["player"] for s in roster if s["player"]), key=lambda p: p["ovr"], default=None)
     run_it_back_blurb = (
@@ -333,21 +560,22 @@ def generate_offseason_options(made_playoffs, wins, roster):
     )
     depth_names = [random_name(), random_name()]
 
-    return {
-        "pick_number": None,
-        "options": [
-            {"id": "run_it_back", "type": "hold", "label": "Run It Back", "blurb": run_it_back_blurb},
-            _build_chase_a_star_option(),
-            {
-                "id": "invest_in_depth",
-                "type": "depth",
-                "label": "Invest in Depth",
-                "blurb": f"Sign {depth_names[0]} and {depth_names[1]} off the open market. "
-                "Raises your floor, not your ceiling.",
-                "depth_signees": depth_names,
-            },
-        ],
-    }
+    options = [
+        {"id": "run_it_back", "type": "hold", "label": "Run It Back", "blurb": run_it_back_blurb},
+        _build_chase_a_star_option(),
+        {
+            "id": "invest_in_depth",
+            "type": "depth",
+            "label": "Invest in Depth",
+            "blurb": f"Sign {depth_names[0]} and {depth_names[1]} off the open market. "
+            "Raises your floor, not your ceiling.",
+            "depth_signees": depth_names,
+        },
+    ]
+    options += generate_free_agent_options(space, philosophy)
+    if trade_offer:
+        options.append(trade_offer)
+    return {"pick_number": None, "options": options}
 
 
 def _resolve_draft_choice(choice_id, prospect):
@@ -358,52 +586,66 @@ def _resolve_draft_choice(choice_id, prospect):
         arch = next(a for a in DRAFT_ARCHETYPES if a["id"] == choice_id)
         lo, hi = arch["ovr_range"]
         ovr = random.randint(lo, hi)
+        ovr = max(35, min(99, ovr + prospect.get("draft_class_ovr_bonus", 0)))
         potential = min(99, ovr + random.randint(*arch["potential_bonus_range"]))
 
     return {
         "name": prospect["name"], "position": prospect["position"], "height": prospect["height"],
         "weight": prospect["weight"], "traits": prospect["traits"], "age": prospect["age"],
         "ovr": ovr, "potential": potential, "origin": prospect.get("origin", ""),
-        "injury_note": None,
+        "injury_note": None, "salary": salary_for_ovr(ovr),
     }
 
 
-def _weakest_slot(roster):
+def _weakest_slot(roster, protected_slots=None):
     """Prefer replacing the weakest player at the *most duplicated*
     position — that's how a roster actually corrects a 4-centers problem
-    instead of just swapping in a 5th one."""
+    instead of just swapping in a 5th one. `protected_slots` excludes
+    slots already filled earlier in the SAME offseason batch, so signing
+    two free agents in one turn can't have the second immediately
+    overwrite the first."""
+    protected_slots = protected_slots or set()
+    candidates = [s for s in roster if s["slot"] not in protected_slots]
+    if not candidates:
+        candidates = roster  # every slot protected — fall back to all
+
     counts = {}
     for s in roster:
         if s["player"]:
             counts[s["player"]["position"]] = counts.get(s["player"]["position"], 0) + 1
 
-    def score(slot):
-        if not slot["player"]:
-            return (1, 0)  # open slots go first
-        dup = counts.get(slot["player"]["position"], 1)
-        return (0, -dup, -( -slot["player"]["ovr"]))
-
-    filled_dupes = [s for s in roster if s["player"] and counts.get(s["player"]["position"], 1) > 1]
+    filled_dupes = [s for s in candidates if s["player"] and counts.get(s["player"]["position"], 1) > 1]
     if filled_dupes:
         return min(filled_dupes, key=lambda s: s["player"]["ovr"])
-    return min(roster, key=lambda s: s["player"]["ovr"] if s["player"] else -1)
+    return min(candidates, key=lambda s: s["player"]["ovr"] if s["player"] else -1)
 
 
-def resolve_offseason_choice(choice_id, roster, depth_rating, prospect=None, depth_signees=None):
-    """Applies the player's decision. Returns (roster, depth_rating, notes).
-    `prospect`/`depth_signees` are the exact data the client displayed for
-    the chosen option, reused as-is so the identity shown matches reality."""
+def resolve_offseason_choice(
+    choice_id, roster, depth_rating, prospect=None, depth_signees=None,
+    trade_give_slot=None, philosophy=None, protected_slots=None,
+):
+    """Applies the player's decision. Returns (roster, depth_rating, notes,
+    changed_slot). `prospect`/`depth_signees`/`trade_give_slot` are the
+    exact data the client displayed for the chosen option, reused as-is so
+    the identity shown matches reality. `protected_slots` excludes slots
+    already touched earlier in the same offseason batch. `changed_slot` is
+    the roster slot this call just filled (None if nothing changed), so a
+    caller applying multiple choices in sequence can protect it."""
     notes = []
+    changed_slot = None
+    phil_info = FRONT_OFFICE_PHILOSOPHIES.get(philosophy, {})
 
-    if choice_id in ("safe", "balanced", "boom_bust", "trade_for_veteran"):
+    if choice_id in ("safe", "balanced", "boom_bust", "international", "old_man_knees",
+                      "acl_recovery", "aging_high_iq", "trade_for_veteran"):
         if prospect is None:
             prospect = generate_prospect_profile()
             prospect["age"] = random.randint(19, 22)
             prospect["origin"] = ""
         new_player = _resolve_draft_choice(choice_id, prospect)
-        target = _weakest_slot(roster)
+        target = _weakest_slot(roster, protected_slots)
         old = target["player"]
         target["player"] = new_player
+        changed_slot = target["slot"]
         if old:
             notes.append(f"{old['name']} moves on. {new_player['name']} steps into the lineup.")
         else:
@@ -413,16 +655,19 @@ def resolve_offseason_choice(choice_id, roster, depth_rating, prospect=None, dep
         notes.append("The front office stands pat.")
 
     elif choice_id == "chase_a_star":
-        if prospect and random.random() < 0.45:
+        success_chance = 0.45 + phil_info.get("chase_a_star_success_delta", 0)
+        if prospect and random.random() < success_chance:
             ovr = random.randint(83, 93)
             new_player = {
                 "name": prospect["name"], "position": prospect["position"], "height": prospect["height"],
                 "weight": prospect["weight"], "traits": prospect["traits"], "age": prospect["age"],
                 "ovr": ovr, "potential": ovr, "origin": "Trade", "injury_note": None,
+                "salary": salary_for_ovr(ovr),
             }
-            target = _weakest_slot(roster)
+            target = _weakest_slot(roster, protected_slots)
             old = target["player"]
             target["player"] = new_player
+            changed_slot = target["slot"]
             old_name = old["name"] if old else "a roster spot"
             notes.append(f"The trade lands. {new_player['name']} joins the roster — {old_name} is dealt away.")
         else:
@@ -435,13 +680,79 @@ def resolve_offseason_choice(choice_id, roster, depth_rating, prospect=None, dep
         names = depth_signees if depth_signees else [random_name(), random_name()]
         notes.append(f"{names[0]} and {names[1]} sign on as depth pieces off the bench.")
 
+    elif choice_id.startswith("sign_fa"):
+        if prospect is None:
+            raise ValueError("Free agent signing is missing prospect data.")
+        target = _weakest_slot(roster, protected_slots)
+        old = target["player"]
+        new_player = make_player(
+            ovr=prospect.get("ovr_hint", 65), age=prospect["age"], profile=prospect, origin="Free Agency",
+        )
+        target["player"] = new_player
+        changed_slot = target["slot"]
+        old_name = old["name"] if old else "a roster spot"
+        notes.append(f"{new_player['name']} signs as a free agent, ${new_player['salary']}M on the books. "
+                      f"{old_name} is waived to make room.")
+
+    elif choice_id == "accept_trade_offer":
+        if prospect is None:
+            raise ValueError("Trade offer is missing incoming player data.")
+        protected_slots = protected_slots or set()
+        target = None
+        if trade_give_slot not in protected_slots:
+            target = next((s for s in roster if s["slot"] == trade_give_slot), None)
+        if target is None:
+            target = _weakest_slot(roster, protected_slots)
+        old = target["player"]
+        target["player"] = prospect
+        changed_slot = target["slot"]
+        old_name = old["name"] if old else "a roster spot"
+        notes.append(f"The trade goes through. {prospect['name']} joins the roster — {old_name} is dealt away.")
+
     else:
         raise ValueError(f"Unknown choice_id: {choice_id!r}")
 
-    return roster, depth_rating, notes
+    return roster, depth_rating, notes, changed_slot
 
 
-def age_and_develop(roster):
+def resolve_offseason_choices(choices, roster, depth_rating, philosophy=None):
+    """Applies a LIST of offseason moves in sequence — e.g. one draft pick
+    plus one or more free agent signings in the same offseason. Each item
+    is the exact option object the frontend displayed (with its
+    `prospect`/`depth_signees`/`trade_give_slot`), same shape a single
+    choice always used. Notes from every move are concatenated in order.
+    Slots filled earlier in the batch are protected so a later signing
+    can't immediately overwrite one made moments ago."""
+    all_notes = []
+    protected_slots = set()
+    for choice in choices:
+        choice_id = choice.get("id") or choice.get("choice_id")
+        if not choice_id:
+            continue
+        roster, depth_rating, notes, changed_slot = resolve_offseason_choice(
+            choice_id, roster, depth_rating,
+            prospect=choice.get("prospect"),
+            depth_signees=choice.get("depth_signees"),
+            trade_give_slot=choice.get("trade_give_slot"),
+            philosophy=philosophy,
+            protected_slots=protected_slots,
+        )
+        if changed_slot:
+            protected_slots.add(changed_slot)
+        all_notes.extend(notes)
+
+    if not all_notes:
+        all_notes.append("The front office stands pat.")
+    return roster, depth_rating, all_notes
+
+
+def age_and_develop(roster, philosophy=None):
+    phil_info = FRONT_OFFICE_PHILOSOPHIES.get(philosophy, {})
+    dev_ceiling = 26 + phil_info.get("dev_age_ceiling_delta", 0)
+    decline_start = 31 + phil_info.get("decline_age_start_delta", 0)
+    young_mult = phil_info.get("young_dev_multiplier", 1.0)
+    cheap_dev_bonus = phil_info.get("cheap_dev_bonus", False)
+
     notes = []
     for slot in roster:
         p = slot["player"]
@@ -454,9 +765,13 @@ def age_and_develop(roster):
             p["injury_note"] = None
             notes.append(f"{p['name']} is back to full strength.")
 
-        if p["age"] <= 26 and p["ovr"] < p["potential"]:
-            p["ovr"] = min(p["potential"], p["ovr"] + random.randint(1, 4))
-        elif p["age"] >= 31:
+        if p["age"] <= dev_ceiling and p["ovr"] < p["potential"]:
+            gain = random.randint(1, 4)
+            if cheap_dev_bonus and p.get("salary", 0) < 10:
+                gain += 1
+            gain = round(gain * young_mult)
+            p["ovr"] = min(p["potential"], p["ovr"] + gain)
+        elif p["age"] >= decline_start:
             p["ovr"] = max(35, p["ovr"] - random.randint(1, 5))
 
         if random.random() < 0.06 and p["ovr"] < 90:
@@ -538,8 +853,6 @@ def _finals_spectacle(roster):
         "opponent_name": opponent,
         "series_score": f"4\u2013{games_against}",
         "finals_mvp": mvp_name,
-        "headline": f"{{team}} defeat the {opponent} in {4 + games_against}, "
-        f"with {mvp_name} named Finals MVP.",
     }
 
 
@@ -590,8 +903,8 @@ def _hot_seat_delta(season_result):
     return 12
 
 
-def simulate_season(roster, depth_rating, season_number):
-    dev_notes = age_and_develop(roster)
+def simulate_season(roster, depth_rating, season_number, philosophy=None):
+    dev_notes = age_and_develop(roster, philosophy)
     rating = compute_team_rating(roster, depth_rating)
     wins, losses = simulate_regular_season(rating)
     playoff = simulate_playoffs(rating, wins)
@@ -614,10 +927,10 @@ def simulate_season(roster, depth_rating, season_number):
 # --- Post-season situations. Pure data — add more entries any time. ---
 # `requires_player` picks a random current roster player and makes their
 # name available as {player_name} in the prompt. `requires_champion`
-# restricts a situation to seasons that just won it all. `effects` are
-# meter deltas applied on resolution (fan_support / hot_seat / depth_rating,
-# all optional). A few situations have extra mechanical consequences beyond
-# simple meter math — see `_apply_situation_special_effects`.
+# restricts a situation/question to seasons that just won it all.
+# `effects` are meter deltas applied on resolution (fan_support / hot_seat
+# / depth_rating, all optional). A few situations have extra mechanical
+# consequences beyond simple meter math — see `_apply_situation_special_effects`.
 SITUATIONS = [
     {
         "id": "bust_question",
@@ -858,6 +1171,41 @@ REPORTER_QUESTIONS = [
         ],
     },
     {
+        "id": "finals_hennessy_celebration",
+        "requires_player": True,
+        "requires_champion": True,
+        "prompt": "Reporter Buster Briggs catches you drenched in champagne: \u201cWe saw "
+        "{player_name} chugging Hennessy out of a Timberland boot on the parade float. Is "
+        "this the culture you envisioned?\u201d",
+        "options": [
+            {"id": "embrace_henny", "label": "\u201cThat's Culture Leadership\u201d",
+             "blurb": "You defend the boot-chug. Fans instantly order the jersey. Ownership "
+             "is scheduling a very dynamic intervention.",
+             "effects": {"fan_support": 15, "hot_seat": 12}},
+            {"id": "condemn_boot", "label": "\u201cWe Will Handle It Internally\u201d",
+             "blurb": "You kill the vibe entirely. You look like a cop on national television.",
+             "effects": {"fan_support": -10, "hot_seat": -5}},
+        ],
+    },
+    {
+        "id": "finals_fbi_raid_rings",
+        "requires_player": True,
+        "requires_champion": True,
+        "prompt": "A reporter pulls up a fresh post: \u201c{player_name} just claimed on "
+        "Instagram Live that this championship ring is \u2018filled with tracking devices "
+        "from the deep state\u2019 and he's flushing his down the toilet. Your thoughts?\u201d",
+        "options": [
+            {"id": "agree_deep_state", "label": "\u201cHe Might Be Onto Something\u201d",
+             "blurb": "You look directly into the camera and squint. The league office "
+             "fines you $50k before you leave the podium.",
+             "effects": {"fan_support": 14, "hot_seat": 18}},
+            {"id": "buy_new_ring", "label": "\u201cWe'll Order Him a Plastic One\u201d",
+             "blurb": "You treat your Finals MVP like a toddler. It diffuses the media but "
+             "might mess up the vibes.",
+             "effects": {"fan_support": -4, "hot_seat": -4}},
+        ],
+    },
+    {
         "id": "roman_empire_question",
         "requires_player": False,
         "requires_champion": False,
@@ -891,8 +1239,8 @@ REPORTER_QUESTIONS = [
         "id": "podcast_take",
         "requires_player": True,
         "requires_champion": False,
-        "prompt": "A reporter asks: \u201cWhat did you think of {player_name}'s podcast where he "
-        "said this team \u2018doesn't have an identity\u2019?\u201d",
+        "prompt": "A reporter asks: \u201cWhat did you think of {player_name}'s podcast where "
+        "he said this team \u2018doesn't have an identity\u2019?\u201d",
         "options": [
             {"id": "laugh_it_off", "label": "Laugh It Off",
              "blurb": "\u201cHe's a character. That's why we love him.\u201d",
@@ -912,32 +1260,14 @@ REPORTER_QUESTIONS = [
             {"id": "embrace_the_chaos", "label": "\u201cWe Encourage Free Thinkers\u201d",
              "blurb": "Fully unhinged answer. The city loves it. Ownership does not.",
              "effects": {"fan_support": 12, "hot_seat": 15}},
-            {"id": "distance_yourself", "label": "\u201cThat's a Personal Belief, Not a Team Position\u201d",
+            {"id": "distance_yourself", "label": "\u201cThat's a Personal Belief, Not a Team "
+             "Position\u201d",
              "blurb": "Boring, safe, correct.",
              "effects": {"fan_support": -1, "hot_seat": -2}},
         ],
     },
-        {
-        "id": "finals_hennessy_celebration",
-        "requires_player": True,
-        "requires_champion": True,
-        "prompt": "Reporter Buster Briggs catches you drenched in champagne: \u201cWe saw {player_name} chugging Hennessy out of a timberland boot on the parade float. Is this the culture you envisioned?\u201d",
-        "options": [
-            {"id": "embrace_henny", "label": "\u201cThat's Culture Leadership\u201d", "blurb": "You defend the boot-chug. Fans instantly order the jersey. Ownership is scheduling a dynamic intervention.", "effects": {"fan_support": 15, "hot_seat": 12}},
-            {"id": "condemn_boot", "label": "\u201cWe Will Handle It Internally\u201d", "blurb": "You kill the vibe entirely. You look like a cop on national television.", "effects": {"fan_support": -10, "hot_seat": -5}},
-        ],
-    },
-    {
-        "id": "finals_fbi_raid_rings",
-        "requires_player": True,
-        "requires_champion": True,
-        "prompt": "A reporter pulls up a fresh tweet: \u201c{player_name} just claimed on Instagram Live that this championship ring is 'filled with tracking devices from the deep state' and he's flushing his down the toilet. Your thoughts?\u201d",
-        "options": [
-            {"id": "agree_deep_state", "label": "\u201cHe Might Be Onto Something\u201d", "blurb": "You look directly into the camera and squint. The league office fines you $50k before you leave the podium.", "effects": {"fan_support": 14, "hot_seat": 18}},
-            {"id": "buy_new_ring", "label": "\u201cWe'll Order Him a Plastic One\u201d", "blurb": "You treat your Finals MVP like a toddler. It diffuses the media but might mess up vibes.", "effects": {"fan_support": -4, "hot_seat": -4}},
-        ],
-    },
 ]
+
 
 def _fmt(text, context):
     return text.format(**context) if context else text
@@ -969,8 +1299,6 @@ def maybe_generate_situation(roster, fan_support, hot_seat, champion=False, fina
         template = random.choice(champion_only)
         context = {"player_name": finals_mvp_name or "your best player"}
         return _build_situation_payload(template, context)
-
-    has_player = any(slot["player"] for slot in roster)
 
     # Guarantee something every season, and give reporter questions real
     # airtime instead of drowning them in the bigger situations pool.
@@ -1062,44 +1390,62 @@ def resolve_situation(state, situation_id, choice_id, context=None):
     return {"state": new_state, "note": note}
 
 
-def new_game(city="", team_name=""):
+def new_game(city="", team_name="", philosophy="win_now"):
     city = (city or "").strip()[:30] or "Your City"
     team_name = (team_name or "").strip()[:30] or "The Franchise"
+    if philosophy not in FRONT_OFFICE_PHILOSOPHIES:
+        philosophy = "win_now"
+
+    draft_class = roll_draft_class()
+    roster = new_starting_roster()
 
     state = {
         "season_number": 1,
         "city": city,
         "team_name": team_name,
-        "roster": new_starting_roster(),
+        "philosophy": philosophy,
+        "roster": roster,
         "depth_rating": random.randint(30, 40),
         "fan_support": 50,
         "hot_seat": 20,
+        "draft_class": draft_class,
+        "last_flavor": None,
         "history": [],
         "streak": 0,
         "max_streak": 0,
     }
-    decision = {"season_number": 1, "pick_number": 1, "options": generate_draft_options(1, state["roster"])}
+    decision = {
+        "season_number": 1, "pick_number": 1,
+        "options": generate_draft_options(1, roster, draft_class, philosophy),
+    }
     return {"state": state, "decision": decision}
 
 
-def advance_dynasty(state, choice_id, prospect=None, depth_signees=None):
+def advance_dynasty(state, choices):
+    """`choices` is a list of 0+ option objects the frontend displayed and
+    the player selected this offseason — e.g. [draft_pick_option,
+    free_agent_option]. Each is applied in order via
+    resolve_offseason_choices."""
     roster = state["roster"]
     depth_rating = state["depth_rating"]
+    philosophy = state.get("philosophy")
 
-    roster, depth_rating, offseason_notes = resolve_offseason_choice(
-        choice_id, roster, depth_rating, prospect=prospect, depth_signees=depth_signees
+    if choices is None:
+        choices = []
+    roster, depth_rating, offseason_notes = resolve_offseason_choices(
+        choices, roster, depth_rating, philosophy=philosophy
     )
 
-    season_result = simulate_season(roster, depth_rating, state["season_number"])
+    season_result = simulate_season(roster, depth_rating, state["season_number"], philosophy)
 
     fan_support = max(5, min(99, state.get("fan_support", 50) + _fan_support_delta(season_result)))
     hot_seat = max(0, min(99, state.get("hot_seat", 20) + _hot_seat_delta(season_result)))
     season_result["fan_support"] = fan_support
     season_result["hot_seat"] = hot_seat
+    season_result["cap_space"] = cap_space(roster, depth_rating)
 
     flavor = _flavor_note(season_result, roster, last_flavor=state.get("last_flavor"))
     extra_notes = [flavor]
-
     if hot_seat >= 80:
         extra_notes.append("Ownership is one bad month from a change.")
     season_result["notes"] = offseason_notes + season_result["notes"] + extra_notes
@@ -1110,15 +1456,18 @@ def advance_dynasty(state, choice_id, prospect=None, depth_signees=None):
 
     next_season_number = state["season_number"] + 1
     game_over = next_season_number > TOTAL_SEASONS
+    next_draft_class = roll_draft_class()
 
     new_state = {
         "season_number": next_season_number,
         "city": state["city"],
         "team_name": state["team_name"],
+        "philosophy": philosophy,
         "roster": roster,
         "depth_rating": depth_rating,
         "fan_support": fan_support,
         "hot_seat": hot_seat,
+        "draft_class": next_draft_class,
         "last_flavor": flavor,
         "history": history,
         "streak": streak,
@@ -1127,7 +1476,10 @@ def advance_dynasty(state, choice_id, prospect=None, depth_signees=None):
 
     next_decision = None
     if not game_over:
-        offseason = generate_offseason_options(season_result["made_playoffs"], season_result["wins"], roster)
+        offseason = generate_offseason_options(
+            season_result["made_playoffs"], season_result["wins"], roster,
+            depth_rating=depth_rating, draft_class=next_draft_class, philosophy=philosophy,
+        )
         next_decision = {
             "season_number": next_season_number,
             "pick_number": offseason["pick_number"],

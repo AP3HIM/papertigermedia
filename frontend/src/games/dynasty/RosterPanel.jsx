@@ -14,7 +14,7 @@ export default function RosterPanel({ roster, depthRating }) {
                 </div>
                 <p className="ptm-roster__player-meta">
                   {slot.player.position} · {slot.player.height} · {slot.player.weight} lbs · Age{" "}
-                  {slot.player.age}
+                  {slot.player.age} · ${slot.player.salary}M
                   {slot.player.origin ? ` · ${slot.player.origin}` : ""}
                 </p>
                 {slot.player.traits && slot.player.traits.length > 0 && (

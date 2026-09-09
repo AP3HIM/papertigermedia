@@ -12,6 +12,7 @@ const TOTAL_SEASONS = 10;
 
 const PHASE = {
   INTRO: "intro",
+  STARTING: "starting",
   DECIDING: "deciding",
   SIMULATING: "simulating",
   RESULT: "result",
@@ -43,9 +44,10 @@ export default function DynastyGame() {
     }
   }, []);
 
-  async function handleStart(city, teamName) {
+  async function handleStart(city, teamName, philosophy) {
+    setPhase(PHASE.STARTING);
     try {
-      const data = await newDynastyGame({ city, teamName });
+      const data = await newDynastyGame({ city, teamName, philosophy });
       setGameState(data.state);
       setDecision(data.decision);
       setSeasonResult(null);
@@ -69,13 +71,13 @@ export default function DynastyGame() {
     }
   }
 
-  async function handleChoice(option) {
+  async function handleChoice(chosenOptions) {
     setPhase(PHASE.SIMULATING);
     try {
+      const choices = Array.isArray(chosenOptions) ? chosenOptions : [chosenOptions];
       const result = await advanceDynasty({
         state: gameState,
-        choiceId: option.id,
-        chosenOption: option,
+        choices,
       });
 
       setGameState(result.state);
@@ -183,6 +185,14 @@ export default function DynastyGame() {
     );
   }
 
+  if (phase === PHASE.STARTING) {
+    return (
+      <div className="ptm-dynasty">
+        <p className="ptm-dynasty__loading">Building your franchise…</p>
+      </div>
+    );
+  }
+
   if (phase === PHASE.INTRO) {
     return <IntroScreen onStart={handleStart} />;
   }
@@ -205,6 +215,7 @@ export default function DynastyGame() {
         fanSupport={gameState.fan_support}
         hotSeat={gameState.hot_seat}
         pickNumber={decision.pick_number}
+        draftClass={gameState.draft_class}
         options={decision.options}
         onChoose={handleChoice}
         priorResult={seasonResult}

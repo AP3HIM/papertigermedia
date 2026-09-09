@@ -8,7 +8,7 @@ const MORE = [
     to: "/games/dynasty",
     title: "Dynasty",
     subtitle: "Build a multi-season franchise. Live with every decision.",
-    status: "muted",
+    status: "live",
     label: "LIVE",
   },
   {
@@ -29,7 +29,7 @@ const MORE = [
     to: "/articles",
     title: "Archive",
     subtitle: "Original reporting and analysis, preserved.",
-    status: "active",
+    status: "live",
     label: "READ",
   },
 ];
