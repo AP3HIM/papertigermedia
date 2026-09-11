@@ -362,6 +362,7 @@
   letter-spacing: 0.06em;
   color: var(--ptm-muted-gray);
   margin-bottom: 1.5rem;
+  margin-top: 1rem;
 }
 
 .ptm-dynasty__context {
@@ -441,6 +442,20 @@
   color: var(--ptm-muted-gray);
   font-size: 0.9rem;
   margin-top: 0.15rem;
+}
+
+.ptm-dynasty__option-chemistry {
+  font-family: var(--ptm-font-mono);
+  font-size: 0.68rem;
+  margin-left: 0.5rem;
+}
+
+.ptm-dynasty__option-chemistry.is-positive {
+  color: var(--ptm-teal, #1f7a5c);
+}
+
+.ptm-dynasty__option-chemistry.is-negative {
+  color: #b3261e;
 }
 
 .ptm-dynasty__option.is-selected {

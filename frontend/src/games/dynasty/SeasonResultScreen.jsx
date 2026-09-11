@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Button from "../../components/Button";
 import FranchiseHeader from "./FranchiseHeader";
 import RosterPanel from "./RosterPanel";
+import MediaBundle from "./MediaBundle";
 
 function useCountUp(target, durationMs = 500) {
   const [value, setValue] = useState(0);
@@ -46,6 +47,7 @@ export default function SeasonResultScreen({
         totalSeasons={totalSeasons}
         fanSupport={result.fan_support}
         hotSeat={result.hot_seat}
+        chemistry={result.chemistry}
       />
 
       <p className="ptm-dynasty__meta">
@@ -55,7 +57,10 @@ export default function SeasonResultScreen({
       <p className={"ptm-dynasty__record" + (isChampion ? " is-champion" : "")}>
         {wins}–{losses}
       </p>
-      <p className={"ptm-dynasty__result-line" + (isChampion ? " is-champion" : "")}>{result.result}</p>
+
+      <p className={"ptm-dynasty__result-line" + (isChampion ? " is-champion" : "")}>
+        {result.result}
+      </p>
 
       {isChampion && result.opponent_name && (
         <div className="ptm-finals-spectacle">
@@ -65,6 +70,8 @@ export default function SeasonResultScreen({
           <p className="ptm-finals-spectacle__mvp">FINALS MVP — {result.finals_mvp}</p>
         </div>
       )}
+
+      <MediaBundle items={result.media} />
 
       {result.notes.length > 0 && (
         <ul className="ptm-dynasty__notes">

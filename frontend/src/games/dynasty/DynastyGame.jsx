@@ -214,6 +214,7 @@ export default function DynastyGame() {
         totalSeasons={TOTAL_SEASONS}
         fanSupport={gameState.fan_support}
         hotSeat={gameState.hot_seat}
+        chemistry={gameState.chemistry}
         pickNumber={decision.pick_number}
         draftClass={gameState.draft_class}
         options={decision.options}
@@ -248,6 +249,7 @@ export default function DynastyGame() {
         totalSeasons={TOTAL_SEASONS}
         fanSupport={gameState.fan_support}
         hotSeat={gameState.hot_seat}
+        chemistry={gameState.chemistry}
         situation={pendingSituation}
         onChoose={handleSituationChoice}
       />

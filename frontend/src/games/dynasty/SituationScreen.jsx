@@ -7,6 +7,7 @@ export default function SituationScreen({
   totalSeasons,
   fanSupport,
   hotSeat,
+  chemistry,
   situation,
   onChoose,
 }) {
@@ -19,6 +20,7 @@ export default function SituationScreen({
         totalSeasons={totalSeasons}
         fanSupport={fanSupport}
         hotSeat={hotSeat}
+        chemistry={chemistry}
       />
 
       <p className="ptm-situation__eyebrow">DEVELOPING</p>

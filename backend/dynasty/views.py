@@ -54,11 +54,22 @@ class AdvanceView(APIView):
 
 class ResolveSituationView(APIView):
     """POST /api/dynasty/resolve-situation/
-    body: { state, situation_id, choice_id, context }
+    body: { state, situation_id, choice_id, context, made_playoffs, wins }
 
     `context` is the exact context dict the frontend was shown alongside
     the situation (e.g. {"player_name": "..."}) — echoed back so the
     resolution matches what was displayed.
+
+    `made_playoffs` / `wins` are optional, taken from the season_result the
+    frontend already has in hand. When present, the response includes a
+    freshly-regenerated `next_decision` built from the POST-situation
+    state (roster/cap after the situation's effects) instead of the
+    decision options generated before the situation happened — this is
+    what makes something like a forced release or a cap cut actually
+    show up in the choices you're offered next, instead of the situation
+    resolving against a roster the decision screen doesn't know about
+    yet. If omitted, `next_decision` comes back null and the frontend
+    should keep using whatever `decision` it already had.
     """
 
     def post(self, request):
@@ -66,6 +77,8 @@ class ResolveSituationView(APIView):
         situation_id = request.data.get("situation_id")
         choice_id = request.data.get("choice_id")
         context = request.data.get("context") or {}
+        made_playoffs = request.data.get("made_playoffs")
+        wins = request.data.get("wins")
 
         if not state or not situation_id or not choice_id:
             return Response(
@@ -74,7 +87,10 @@ class ResolveSituationView(APIView):
             )
 
         try:
-            result = engine.resolve_situation(state, situation_id, choice_id, context=context)
+            result = engine.resolve_situation(
+                state, situation_id, choice_id, context=context,
+                made_playoffs=made_playoffs, wins=wins,
+            )
         except (KeyError, StopIteration, TypeError, ValueError) as exc:
             return Response(
                 {"detail": f"Couldn't resolve that situation: {exc}"},

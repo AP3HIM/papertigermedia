@@ -20,6 +20,17 @@ function estimateCapSpace(roster, depthRating) {
   return Math.round((SALARY_CAP - coreSalary - benchAllocation) * 10) / 10;
 }
 
+function ChemistryTag({ value }) {
+  if (typeof value !== "number" || value === 0) return null;
+  const sign = value > 0 ? "+" : "";
+  return (
+    <span className={"ptm-dynasty__option-chemistry" + (value > 0 ? " is-positive" : " is-negative")}>
+      {sign}
+      {value} CHEM
+    </span>
+  );
+}
+
 function OptionCard({ option, selected, onClick }) {
   return (
     <button
@@ -39,7 +50,10 @@ function OptionCard({ option, selected, onClick }) {
             {option.prospect.accolade ? ` · ${option.prospect.accolade}` : ""}
           </p>
           {option.prospect.traits && (
-            <p className="ptm-dynasty__option-traits">{option.prospect.traits.join(", ")}</p>
+            <p className="ptm-dynasty__option-traits">
+              {option.prospect.traits.join(", ")}
+              <ChemistryTag value={option.prospect.chemistry_preview} />
+            </p>
           )}
         </>
       ) : (
@@ -57,6 +71,7 @@ export default function DecisionScreen({
   totalSeasons,
   fanSupport,
   hotSeat,
+  chemistry,
   pickNumber,
   draftClass,
   options,
@@ -71,14 +86,18 @@ export default function DecisionScreen({
 
   const primaryOptions = options.filter((o) => o.type !== "free_agent" && o.type !== "trade_offer");
   const faOptions = options.filter((o) => o.type === "free_agent");
-  const tradeOption = options.find((o) => o.type === "trade_offer");
+  const tradeOptions = options.filter((o) => o.type === "trade_offer");
 
   const [primaryId, setPrimaryId] = useState(null);
   const [faIds, setFaIds] = useState([]);
-  const [tradeSelected, setTradeSelected] = useState(false);
+  const [tradeIds, setTradeIds] = useState([]);
 
   function toggleFa(id) {
     setFaIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  }
+
+  function toggleTrade(id) {
+    setTradeIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   }
 
   function handleSubmit() {
@@ -88,7 +107,9 @@ export default function DecisionScreen({
     faOptions.forEach((o) => {
       if (faIds.includes(o.id)) chosen.push(o);
     });
-    if (tradeSelected && tradeOption) chosen.push(tradeOption);
+    tradeOptions.forEach((o) => {
+      if (tradeIds.includes(o.id)) chosen.push(o);
+    });
     onChoose(chosen);
   }
 
@@ -103,6 +124,7 @@ export default function DecisionScreen({
         totalSeasons={totalSeasons}
         fanSupport={fanSupport}
         hotSeat={hotSeat}
+        chemistry={chemistry}
       />
 
       <div className="ptm-offseason__grid">
@@ -163,14 +185,19 @@ export default function DecisionScreen({
         </div>
       </div>
 
-      {tradeOption && (
+      {tradeOptions.length > 0 && (
         <div className="ptm-offseason__trade">
-          <p className="ptm-offseason__heading">TRADE OFFER</p>
-          <OptionCard
-            option={tradeOption}
-            selected={tradeSelected}
-            onClick={() => setTradeSelected((v) => !v)}
-          />
+          <p className="ptm-offseason__heading">TRADE {tradeOptions.length > 1 ? "OFFERS" : "OFFER"}</p>
+          <div className="ptm-dynasty__options">
+            {tradeOptions.map((option) => (
+              <OptionCard
+                key={option.id}
+                option={option}
+                selected={tradeIds.includes(option.id)}
+                onClick={() => toggleTrade(option.id)}
+              />
+            ))}
+          </div>
         </div>
       )}
 

@@ -1,0 +1,36 @@
+/* --- Chemistry meter --- */
+
+.ptm-chemistry-meter {
+  min-width: 150px;
+}
+
+.ptm-chemistry-meter__label {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--ptm-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--ptm-muted-gray);
+  margin-bottom: 0.3rem;
+}
+
+.ptm-chemistry-meter__track {
+  height: 6px;
+  background: var(--ptm-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.ptm-chemistry-meter__fill {
+  height: 100%;
+  background: var(--ptm-teal, #1f7a5c);
+  transition: width 0.4s ease;
+}
+
+.ptm-chemistry-meter__status {
+  font-family: var(--ptm-font-mono);
+  font-size: 0.7rem;
+  color: var(--ptm-muted-gray);
+  margin: 0.3rem 0 0;
+  text-align: right;
+}

@@ -1,7 +1,10 @@
 import FanMeter from "./FanMeter";
 import HotSeatMeter from "./HotSeatMeter";
+import ChemistryMeter from "./ChemistryMeter";
 
-export default function FranchiseHeader({ city, teamName, seasonNumber, totalSeasons, fanSupport, hotSeat }) {
+export default function FranchiseHeader({
+  city, teamName, seasonNumber, totalSeasons, fanSupport, hotSeat, chemistry,
+}) {
   return (
     <div className="ptm-franchise-header">
       <div>
@@ -15,6 +18,7 @@ export default function FranchiseHeader({ city, teamName, seasonNumber, totalSea
       <div className="ptm-franchise-header__meters">
         {typeof fanSupport === "number" && <FanMeter value={fanSupport} />}
         {typeof hotSeat === "number" && <HotSeatMeter value={hotSeat} />}
+        {typeof chemistry === "number" && <ChemistryMeter value={chemistry} />}
       </div>
     </div>
   );
