@@ -79,10 +79,12 @@ export default function DecisionScreen({
   priorResult,
   roster,
   depthRating,
+  capMultiplier,
 }) {
   const isDraft = pickNumber !== null && pickNumber !== undefined;
   const classInfo = isDraft ? DRAFT_CLASS_INFO[draftClass] : null;
-  const capSpace = estimateCapSpace(roster, depthRating);
+  const effectiveMultiplier = typeof capMultiplier === "number" ? capMultiplier : 1;
+  const capSpace = Math.round(estimateCapSpace(roster, depthRating) * effectiveMultiplier * 10) / 10;
 
   const primaryOptions = options.filter((o) => o.type !== "free_agent" && o.type !== "trade_offer");
   const faOptions = options.filter((o) => o.type === "free_agent");
@@ -158,6 +160,9 @@ export default function DecisionScreen({
         <div className="ptm-offseason__column ptm-offseason__column--center">
           <p className="ptm-cap-space">
             CAP SPACE <span className={capSpace < 0 ? "is-over" : ""}>${capSpace}M</span>
+            {effectiveMultiplier < 1 && (
+              <span className="ptm-cap-space__note"> (budget cuts in effect)</span>
+            )}
           </p>
           {priorResult && (
             <p className="ptm-dynasty__context">

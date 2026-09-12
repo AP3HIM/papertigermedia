@@ -601,7 +601,17 @@
   margin: 0 0 2rem;
 }
 
-.ptm-dynasty__loading,
+
+.ptm-dynasty__loading {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  min-height: 1.5rem;
+}
+
+.ptm-dynasty__loading.is-visible {
+  opacity: 1;
+}
+
 .ptm-dynasty__error {
   font-family: var(--ptm-font-mono);
   color: var(--ptm-muted-gray);

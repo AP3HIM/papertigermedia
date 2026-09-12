@@ -1,11 +1,12 @@
+import { useRef } from "react";
 import Button from "../../components/Button";
 import RosterPanel from "./RosterPanel";
 import ShareButton from "./ShareButton";
 
 function closingLine(championships, threePeat) {
   if (threePeat) return "History remembers dynasties. This was one.";
-  if (championships >= 4) return `${championships} banners — a legitimate dynasty.`;
-  if (championships >= 2) return `${championships} banners — you built something real.`;
+  if (championships >= 4) return `${championships} banners. A legitimate dynasty.`;
+  if (championships >= 2) return `${championships} banners. You built something real.`;
   if (championships === 1) return "One banner. Not bad for ten years of work.";
   return "No rings this time. Some rebuilds just take longer.";
 }
@@ -22,56 +23,59 @@ export default function RetrospectiveScreen({
   onRestart,
 }) {
   const championships = history.filter((h) => h.champion).length;
+  const captureRef = useRef(null);
 
   return (
     <div className="ptm-dynasty">
-      <p className="ptm-dynasty__eyebrow">TEN SEASONS</p>
-      <h1 className="ptm-dynasty__title">
-        {city} {teamName}
-      </h1>
+      <div ref={captureRef} className="ptm-dynasty__capture">
+        <p className="ptm-dynasty__eyebrow">TEN SEASONS</p>
+        <h1 className="ptm-dynasty__title">
+          {city} {teamName}
+        </h1>
 
-      {threePeat && <p className="ptm-dynasty__three-peat">YOU BUILT A 3-PEAT.</p>}
+        {threePeat && <p className="ptm-dynasty__three-peat">YOU BUILT A 3-PEAT.</p>}
 
-      {typeof legacyScore === "number" && (
-        <div className="ptm-dynasty__legacy-score">
-          <span className="ptm-dynasty__legacy-score-value">{legacyScore}</span>
-          <span className="ptm-dynasty__legacy-score-label">LEGACY SCORE</span>
-        </div>
-      )}
+        {typeof legacyScore === "number" && (
+          <div className="ptm-dynasty__legacy-score">
+            <span className="ptm-dynasty__legacy-score-value">{legacyScore}</span>
+            <span className="ptm-dynasty__legacy-score-label">LEGACY SCORE</span>
+          </div>
+        )}
 
-      <table className="ptm-dynasty__table">
-        <thead>
-          <tr>
-            <th>Season</th>
-            <th>Record</th>
-            <th>Result</th>
-          </tr>
-        </thead>
-        <tbody>
-          {history.map((h) => (
-            <tr key={h.season_number} className={h.champion ? "is-champion" : ""}>
-              <td>{h.season_number}</td>
-              <td>
-                {h.wins}–{h.losses}
-              </td>
-              <td>{h.result}</td>
+        <table className="ptm-dynasty__table">
+          <thead>
+            <tr>
+              <th>Season</th>
+              <th>Record</th>
+              <th>Result</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {history.map((h) => (
+              <tr key={h.season_number} className={h.champion ? "is-champion" : ""}>
+                <td>{h.season_number}</td>
+                <td>
+                  {h.wins}-{h.losses}
+                </td>
+                <td>{h.result}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-      <div className="ptm-dynasty__summary">
-        <div>
-          <span className="ptm-dynasty__summary-value">{championships}</span>
-          <span className="ptm-dynasty__summary-label">CHAMPIONSHIPS</span>
+        <div className="ptm-dynasty__summary">
+          <div>
+            <span className="ptm-dynasty__summary-value">{championships}</span>
+            <span className="ptm-dynasty__summary-label">CHAMPIONSHIPS</span>
+          </div>
+          <div>
+            <span className="ptm-dynasty__summary-value">{maxStreak}</span>
+            <span className="ptm-dynasty__summary-label">BEST STREAK</span>
+          </div>
         </div>
-        <div>
-          <span className="ptm-dynasty__summary-value">{maxStreak}</span>
-          <span className="ptm-dynasty__summary-label">BEST STREAK</span>
-        </div>
+
+        <p className="ptm-dynasty__closing-line">{closingLine(championships, threePeat)}</p>
       </div>
-
-      <p className="ptm-dynasty__closing-line">{closingLine(championships, threePeat)}</p>
 
       <div className="ptm-dynasty__continue">
         <ShareButton
@@ -81,6 +85,7 @@ export default function RetrospectiveScreen({
           maxStreak={maxStreak}
           threePeat={threePeat}
           legacyScore={legacyScore}
+          captureRef={captureRef}
         />
         <Button onClick={onRestart}>START A NEW DYNASTY</Button>
       </div>

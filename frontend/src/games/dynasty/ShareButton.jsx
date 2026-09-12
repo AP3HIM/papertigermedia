@@ -1,4 +1,5 @@
 import { useState } from "react";
+import html2canvas from "html2canvas";
 import "./ShareButton.css";
 
 function buildShareText(city, teamName, history, maxStreak, threePeat, legacyScore) {
@@ -8,7 +9,7 @@ function buildShareText(city, teamName, history, maxStreak, threePeat, legacySco
     null
   );
 
-  let text = `🏀 ${city} ${teamName} — a 10-season dynasty.\n`;
+  let text = `${city} ${teamName}, a 10 season dynasty.\n`;
   if (typeof legacyScore === "number") {
     text += `Legacy Score: ${legacyScore}\n`;
   }
@@ -17,7 +18,7 @@ function buildShareText(city, teamName, history, maxStreak, threePeat, legacySco
     text += `Best season: ${bestSeason.wins}-${bestSeason.losses} (${bestSeason.result}).\n`;
   }
   if (threePeat) {
-    text += `Three-peat champions. 👑\n`;
+    text += `Three-peat champions.\n`;
   } else if (maxStreak >= 2) {
     text += `${maxStreak}-peat at the peak.\n`;
   }
@@ -25,35 +26,89 @@ function buildShareText(city, teamName, history, maxStreak, threePeat, legacySco
   return text;
 }
 
-export default function ShareButton({ city, teamName, history, maxStreak, threePeat, legacyScore }) {
-  const [copied, setCopied] = useState(false);
+export default function ShareButton({
+  city, teamName, history, maxStreak, threePeat, legacyScore, captureRef,
+}) {
+  const [status, setStatus] = useState("idle"); // idle | working | copied | saved
 
   async function handleShare() {
+    setStatus("working");
     const text = buildShareText(city, teamName, history, maxStreak, threePeat, legacyScore);
     const url = window.location.href;
+
+    let file = null;
+    if (captureRef?.current) {
+      try {
+        const canvas = await html2canvas(captureRef.current, {
+          backgroundColor: "#f7f3ea",
+          scale: 2,
+        });
+        const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+        if (blob) {
+          file = new File([blob], `${city}-${teamName}-dynasty.png`, { type: "image/png" });
+        }
+      } catch {
+        file = null; // screenshot failed, fall back to text-only sharing below
+      }
+    }
+
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title: `${city} ${teamName} Dynasty`, text });
+        setStatus("idle");
+        return;
+      } catch (err) {
+        if (err.name === "AbortError") {
+          setStatus("idle");
+          return;
+        }
+        // fall through to the download fallback below
+      }
+    }
+
+    if (file) {
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(file);
+      link.download = file.name;
+      link.click();
+      URL.revokeObjectURL(link.href);
+      setStatus("saved");
+      setTimeout(() => setStatus("idle"), 2500);
+      return;
+    }
 
     if (navigator.share) {
       try {
         await navigator.share({ title: `${city} ${teamName} Dynasty`, text, url });
+        setStatus("idle");
         return;
       } catch (err) {
-        if (err.name === "AbortError") return; // user cancelled the share sheet
-        // fall through to clipboard on any other failure
+        if (err.name === "AbortError") {
+          setStatus("idle");
+          return;
+        }
       }
     }
 
     try {
       await navigator.clipboard.writeText(`${text}\n${url}`);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setStatus("copied");
+      setTimeout(() => setStatus("idle"), 2000);
     } catch {
-      // clipboard blocked (rare) — nothing sensible left to do silently
+      setStatus("idle");
     }
   }
 
+  const label = {
+    idle: "SHARE YOUR DYNASTY",
+    working: "CAPTURING...",
+    copied: "COPIED TO CLIPBOARD",
+    saved: "IMAGE SAVED",
+  }[status];
+
   return (
-    <button className="ptm-share-button" onClick={handleShare} type="button">
-      {copied ? "COPIED TO CLIPBOARD" : "SHARE YOUR DYNASTY"}
+    <button className="ptm-share-button" onClick={handleShare} type="button" disabled={status === "working"}>
+      {label}
     </button>
   );
 }

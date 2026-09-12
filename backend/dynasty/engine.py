@@ -232,7 +232,18 @@ def generate_media_bundle(roster, team_name, season_result):
 
     return items
 
+DEPTH_DECAY_GRACE_SEASONS = 2
+DEPTH_DECAY_MIN = 4
+DEPTH_DECAY_MAX = 9
 
+def decay_depth(depth_rating, seasons_since_investment):
+    """Bench depth isn't something you set once. It holds for a couple
+    seasons on its own, then contracts expire and depth pieces walk in
+    free agency without you reinvesting to replace them."""
+    if seasons_since_investment <= DEPTH_DECAY_GRACE_SEASONS:
+        return depth_rating, 0
+    decay = random.randint(DEPTH_DECAY_MIN, DEPTH_DECAY_MAX)
+    return max(15, depth_rating - decay), decay
 
 def _effective_depth_contribution(depth_rating):
     """Diminishing returns kick in earlier and bite harder — depth should
@@ -825,7 +836,7 @@ def generate_offseason_options(made_playoffs, wins, roster, depth_rating=40, dra
         options = generate_draft_options(pick_number, roster, draft_class, philosophy)
         options += generate_free_agent_options(space, philosophy)
         options += trade_offers
-        return {"pick_number": pick_number, "options": options}
+        return {"pick_number": pick_number, "options": options, "cap_multiplier": cap_multiplier}
 
     best = max((s["player"] for s in roster if s["player"]), key=lambda p: p["ovr"], default=None)
     run_it_back_blurb = (
@@ -848,7 +859,7 @@ def generate_offseason_options(made_playoffs, wins, roster, depth_rating=40, dra
     ]
     options += generate_free_agent_options(space, philosophy)
     options += trade_offers
-    return {"pick_number": None, "options": options}
+    return {"pick_number": None, "options": options, "cap_multiplier": cap_multiplier}
 
 
 KNEES_TAG = " \u00b7 Chronic Knees"
@@ -1609,6 +1620,155 @@ SITUATIONS = [
              "effects": {"hot_seat": 1}},
         ],
     },
+        {
+        "id": "hometown_discount",
+        "requires_best_player": True,
+        "prompt": "{player_name}'s agent calls with an offer. He'll take less money to stay "
+        "if you commit real cap room to the youth basketball program he grew up playing in.",
+        "options": [
+            {"id": "commit_program", "label": "Commit to the Program",
+             "blurb": "Lock him in cheap and put your name behind something that matters to him.",
+             "effects": {"fan_support": 5, "hot_seat": -3, "chemistry": 4}},
+            {"id": "pass", "label": "Keep the Cap Flexibility",
+             "blurb": "He signs elsewhere for full price. You keep your options open.",
+             "effects": {"fan_support": -4, "hot_seat": 2}},
+        ],
+    },
+    {
+        "id": "load_management_backlash",
+        "requires_best_player": True,
+        "prompt": "{player_name} is healthy but banged up, and the team wants to rest him "
+        "for a nationally televised game against a rival. Tickets are already sold out.",
+        "options": [
+            {"id": "sit_him", "label": "Sit Him",
+             "blurb": "Protect him for the long run. A lot of fans paid to see him play tonight.",
+             "effects": {"fan_support": -8, "hot_seat": 3}},
+            {"id": "play_him", "label": "Play Him",
+             "blurb": "Give the fans their money's worth and hope nothing gets worse.",
+             "effects": {"fan_support": 6, "hot_seat": -1}},
+        ],
+    },
+    {
+        "id": "assistant_coach_poaching",
+        "requires_player": False,
+        "prompt": "A rival team wants permission to interview your top assistant coach for "
+        "their head coaching job. He's earned it, but you'd rather keep him.",
+        "options": [
+            {"id": "let_him_go", "label": "Let Him Interview",
+             "blurb": "You lose a good coach, but you did right by him.",
+             "effects": {"fan_support": 2, "hot_seat": 1}},
+            {"id": "block_it", "label": "Block the Request",
+             "blurb": "You keep your staff intact. Word gets around about how you handled it.",
+             "effects": {"fan_support": -3, "hot_seat": -2, "chemistry": -2}},
+        ],
+    },
+    {
+        "id": "veteran_mentorship",
+        "requires_second_best_player": True,
+        "prompt": "A respected veteran wants to personally mentor {player_name}, who's "
+        "talented but has been a real headache in the locker room. It'll mean fewer minutes "
+        "for the veteran.",
+        "options": [
+            {"id": "allow_it", "label": "Let Him Do It",
+             "blurb": "The veteran takes a smaller role to fix a bigger problem.",
+             "effects": {"chemistry": 5, "hot_seat": 1}},
+            {"id": "keep_minutes", "label": "Keep the Veteran on the Floor",
+             "blurb": "You need him playing, not coaching. The headache stays a headache.",
+             "effects": {"chemistry": -3, "fan_support": 1}},
+        ],
+    },
+    {
+        "id": "playoff_price_hike",
+        "requires_player": False,
+        "prompt": "Ownership wants to double playoff ticket prices now that the team is "
+        "actually good. The building will still sell out either way.",
+        "options": [
+            {"id": "raise_prices", "label": "Raise the Prices",
+             "blurb": "Ownership makes real money. Longtime fans get priced out of the run "
+             "they helped build toward.",
+             "effects": {"fan_support": -10, "hot_seat": -8}},
+            {"id": "hold_the_line", "label": "Hold the Line on Price",
+             "blurb": "You leave money on the table. Ownership notices.",
+             "effects": {"fan_support": 6, "hot_seat": 6}},
+        ],
+    },
+    {
+        "id": "referee_controversy",
+        "requires_player": False,
+        "prompt": "A blown call at the end of a close loss is all anyone's talking about. "
+        "Reporters want to know if you're going to say something.",
+        "options": [
+            {"id": "call_it_out", "label": "Call Out the Officiating",
+             "blurb": "Fans love hearing you say what they're thinking. The league fines you "
+             "for public criticism of officials.",
+             "effects": {"fan_support": 7, "hot_seat": 6}},
+            {"id": "take_the_loss", "label": "Take the Loss Quietly",
+             "blurb": "You don't give the league a reason to remember your name.",
+             "effects": {"fan_support": -3, "hot_seat": -3}},
+        ],
+    },
+    {
+        "id": "jersey_retirement_petition",
+        "requires_player": False,
+        "prompt": "Fans are petitioning to retire the number of a franchise legend from "
+        "years ago. It's a great story, but it also takes a number out of circulation for "
+        "every player after him.",
+        "options": [
+            {"id": "retire_it", "label": "Retire the Number",
+             "blurb": "The ceremony is a huge moment for the fanbase and the franchise's "
+             "history.",
+             "effects": {"fan_support": 8, "hot_seat": -2}},
+            {"id": "not_yet", "label": "Not Yet",
+             "blurb": "You tell the fans it isn't the right time. Some of them take that "
+             "personally.",
+             "effects": {"fan_support": -5}},
+        ],
+    },
+    {
+        "id": "quiet_deadline",
+        "requires_player": False,
+        "prompt": "Every other team in the league made a move at the trade deadline. You "
+        "stood pat. Local media is asking why the front office did nothing.",
+        "options": [
+            {"id": "defend_patience", "label": "Defend the Patience",
+             "blurb": "You explain the long view. Some fans buy it, some don't.",
+             "effects": {"fan_support": -2, "hot_seat": -1}},
+            {"id": "admit_missed_it", "label": "Admit You Should Have Done More",
+             "blurb": "Honest, but it doesn't exactly inspire confidence going forward.",
+             "effects": {"fan_support": -5, "hot_seat": 4}},
+        ],
+    },
+    {
+        "id": "charity_mismanagement",
+        "requires_player": False,
+        "prompt": "An audit finds the team's charity foundation mismanaged part of its "
+        "budget last year. Nothing illegal, just sloppy. It's going to come out either way.",
+        "options": [
+            {"id": "get_ahead", "label": "Get Ahead of It",
+             "blurb": "You announce the problem yourself before a reporter does. It still "
+             "costs you, but less than getting caught hiding it would.",
+             "effects": {"fan_support": -4, "hot_seat": -6}},
+            {"id": "quiet_fix", "label": "Fix It Quietly",
+             "blurb": "You correct it internally and hope nobody asks. If someone finds out "
+             "later, it'll look a lot worse than it is now.",
+             "effects": {"fan_support": -1, "hot_seat": 3}},
+        ],
+    },
+    {
+        "id": "role_player_ask",
+        "requires_player": True,
+        "prompt": "{player_name} has been a steady, unspectacular role player for years and "
+        "wants a real raise on his next deal, more than his stats say he's worth on paper.",
+        "options": [
+            {"id": "pay_the_loyalty", "label": "Pay Him What He's Asking",
+             "blurb": "You're paying for what he means to this team, not just what shows up "
+             "in a box score.",
+             "effects": {"chemistry": 5, "hot_seat": 2}},
+            {"id": "let_market_decide", "label": "Offer Market Value Only",
+             "blurb": "He takes it personally. Some of the locker room agrees with him.",
+             "effects": {"chemistry": -4, "fan_support": -1}},
+        ],
+    },
 ]
 
 REPORTER_QUESTIONS = [
@@ -1723,6 +1883,86 @@ REPORTER_QUESTIONS = [
              "effects": {"fan_support": -1, "hot_seat": -2}},
         ],
     },
+    {
+        "id": "finals_disneyland_snub",
+        "requires_player": True,
+        "requires_champion": True,
+        "prompt": "Reporter Churning McNotice asks: “{player_name} was asked if he's going to Disneyland, and he said, ‘No, Disneyland is a corporate panopticon. I'm going to a sensory deprivation tank in Montana.’ How does the team feel about losing that Disney sponsorship integration?”",
+        "options": [
+            {
+                "id": "support_montana",
+                "label": "“We Support His Wellness Journey”",
+                "blurb": "You validate his alternative lifestyle. Hippie fans rejoice, but the marketing department loses a $2M bonus.",
+                "effects": {"fan_support": 8, "hot_seat": 5}
+            },
+            {
+                "id": "damage_control_mickey",
+                "label": "“I'll Personally Go To Disneyland”",
+                "blurb": "You put on the Mickey ears right there at the podium to save the corporate deal. You are thoroughly clowned online.",
+                "effects": {"fan_support": -6, "hot_seat": -5}
+            }
+        ]
+    },
+    {
+        "id": "finals_coaching_credit",
+        "requires_player": False,
+        "requires_champion": True,
+        "prompt": "Reporter Skip Scowl smiles thinly: “Now that you've won the title, some analysts are saying this roster was so stacked a golden retriever could have coached them to a ring. How much of this trophy belongs to your tactical schemes?”",
+        "options": [
+            {
+                "id": "take_credit",
+                "label": "“The X's and O's Don't Draw Themselves”",
+                "blurb": "You demand your respect. The local media labels you an egomaniac before midnight.",
+                "effects": {"fan_support": -3, "hot_seat": 10}
+            },
+            {
+                "id": "credit_players",
+                "label": "“It's All About The Players”",
+                "blurb": "The ultimate humble-brag. Safe, standard, and perfectly keeps your locker room happy.",
+                "effects": {"fan_support": 5, "hot_seat": -3}
+            }
+        ]
+    },
+    {
+        "id": "pregame_fit_roast",
+        "requires_player": True,
+        "requires_champion": False,
+        "prompt": "A reporter holds up an iPad: “{player_name} arrived at the arena tonight wearing what looks like a neon-green hazmat suit, giant purple ski boots, and no shirt. What message do you think that sends about your team's focus?”",
+        "options": [
+            {
+                "id": "praise_fashion",
+                "label": "“It’s Called High Fashion”",
+                "blurb": "You lean into the absurdity. Sneakerheads and fashion blogs hype you up as a player's coach.",
+                "effects": {"fan_support": 7, "hot_seat": 1}
+            },
+            {
+                "id": "demand_business_casual",
+                "label": "“We Focus on Basketball, Not the Runway”",
+                "blurb": "Old-school commentators nod in approval, but your young roster mutters about your lack of 'drip' behind your back.",
+                "effects": {"fan_support": -5, "hot_seat": -2}
+            }
+        ]
+    },
+    {
+        "id": "hot_sauce_incident",
+        "requires_player": True,
+        "requires_champion": False,
+        "prompt": "Reporter Penny Pincher leans in: “There's a viral clip of {player_name} pouring an entire bottle of ghost pepper hot sauce into the opposing bench's water coolers during pregame warmups. Care to comment?”",
+        "options": [
+            {
+                "id": "deny_knowledge",
+                "label": "“I Didn't See Anything”",
+                "blurb": "You completely stonewall. The league fines you for dynamic negligence, but the locker room loves the loyalty.",
+                "effects": {"fan_support": 10, "hot_seat": 8}
+            },
+            {
+                "id": "apologize_salsa",
+                "label": "“That is Unacceptable Behavior”",
+                "blurb": "You throw him under the bus to dodge a league penalty, fracturing your relationship with the player.",
+                "effects": {"fan_support": -8, "hot_seat": -6}
+            }
+        ]
+    }
 ]
 
 
@@ -1974,6 +2214,7 @@ def resolve_situation(state, situation_id, choice_id, context=None, made_playoff
             "season_number": state["season_number"],
             "pick_number": offseason["pick_number"],
             "options": offseason["options"],
+            "cap_multiplier": offseason["cap_multiplier"],
         }
 
     return {
@@ -2007,6 +2248,7 @@ def new_game(city="", team_name="", philosophy="win_now"):
         "streak": 0,
         "max_streak": 0,
         "last_situation_id": None,
+        "seasons_since_depth_investment": 0,
     }
     decision = {
         "season_number": 1, "pick_number": 1,
@@ -2030,6 +2272,22 @@ def advance_dynasty(state, choices):
     roster, depth_rating, chemistry, offseason_notes = resolve_offseason_choices(
         choices, roster, depth_rating, chemistry=chemistry, philosophy=philosophy
     )
+
+    invested_in_depth = any(
+        (c.get("id") or c.get("choice_id")) == "invest_in_depth" for c in choices
+    )
+    seasons_since_depth_investment = state.get("seasons_since_depth_investment", 0)
+    if invested_in_depth:
+        seasons_since_depth_investment = 0
+    else:
+        seasons_since_depth_investment += 1
+
+    depth_rating, depth_decay = decay_depth(depth_rating, seasons_since_depth_investment)
+    if depth_decay > 0:
+        offseason_notes.append(
+            "Your bench depth has gotten worse. Contracts expired and nobody stepped up "
+            "to replace them."
+        )
 
     season_result = simulate_season(roster, depth_rating, state["season_number"], philosophy, chemistry=chemistry)
 
@@ -2081,6 +2339,7 @@ def advance_dynasty(state, choices):
         "history": history,
         "streak": streak,
         "max_streak": max_streak,
+        "seasons_since_depth_investment": seasons_since_depth_investment,
     }
 
     next_decision = None
@@ -2093,6 +2352,7 @@ def advance_dynasty(state, choices):
             "season_number": next_season_number,
             "pick_number": offseason["pick_number"],
             "options": offseason["options"],
+            "cap_multiplier": offseason["cap_multiplier"],
         }
 
     pending_situation = maybe_generate_situation(

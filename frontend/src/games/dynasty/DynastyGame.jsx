@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import LoadingCycler from "./LoadingCycler";
 import { advanceDynasty, newDynastyGame, resolveDynastySituation } from "../../lib/api";
 import DecisionScreen from "./DecisionScreen";
 import IntroScreen from "./IntroScreen";
@@ -214,14 +215,14 @@ export default function DynastyGame() {
   if (phase === PHASE.STARTING) {
     return (
       <div className="ptm-dynasty ptm-dynasty__loading-screen">
-        <p className="ptm-dynasty__loading">Building your franchise…</p>
+        <LoadingCycler />
         <p className="ptm-dynasty__loading-blurb">
-          Dynasty is a 10-season front-office sim — draft, sign free agents, weigh trade
+          Dynasty is a 10 season front office sim. Draft, sign free agents, weigh trade
           offers, and live with the consequences. Every offseason move shifts your cap
           space, your locker room chemistry, and how long ownership's patience lasts.
           Win big and the city throws a parade. Lose too much and you're one bad season
-          from the hot seat. First load can take a little while to spin up the server —
-          hang tight.
+          from the hot seat. First load can take a little while to spin up the server,
+          so hang tight.
         </p>
       </div>
     );
