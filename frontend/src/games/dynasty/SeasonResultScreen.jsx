@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Button from "../../components/Button";
 import FranchiseHeader from "./FranchiseHeader";
 import RosterPanel from "./RosterPanel";
-import MediaBundle from "./MediaBundle";
+import MediaBundle from "./Mediabundle";
 
 function useCountUp(target, durationMs = 500) {
   const [value, setValue] = useState(0);
