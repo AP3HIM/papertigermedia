@@ -30,14 +30,14 @@ export default function MediaBundle({ items }) {
 }
 
 function NewspaperCard({ item }) {
-  const { headline, subhead, team_theme } = item;
+  const { headline, subhead, team_theme, masthead } = item;
   return (
     <div
       className="ptm-newspaper"
       style={{ "--ptm-primary": team_theme.primary, "--ptm-secondary": team_theme.secondary }}
     >
       <div className="ptm-newspaper__bar" />
-      <div className="ptm-newspaper__eyebrow">EXTRA EDITION</div>
+      <div className="ptm-newspaper__eyebrow">{masthead || "EXTRA EDITION"}</div>
       <h2 className="ptm-newspaper__headline">{headline}</h2>
       <p className="ptm-newspaper__subhead">{subhead}</p>
       <div className="ptm-newspaper__bar" />

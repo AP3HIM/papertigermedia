@@ -10,6 +10,22 @@ const LOADING_MESSAGES = [
   "Painting the logo at center court...",
   "Setting the ticket prices...",
   "Ordering way too much team merch...",
+  // --- New Additions ---
+  "Drafting the roster...",
+  "Analyzing scouting reports...",
+  "Reviewing the salary cap...",
+  "Finalizing player contracts...",
+  "Preparing the training camp...",
+  "Reviewing the season schedule...",
+  "Setting up the practice facility...",
+  "Briefing the medical staff...",
+  "Opening the ticket office...",
+  "Configuring the arena seating...",
+  "Syncing the game day clocks...",
+  "Testing the broadcast equipment...",
+  "Structuring the front office...",
+  "Organizing the scouting network...",
+  "Securing local sponsorships..."
 ];
 
 const FADE_MS = 300;

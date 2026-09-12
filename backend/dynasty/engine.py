@@ -15,47 +15,41 @@ import random
 
 FIRST_NAMES = [
     # --- Original List ---
-    "Jaylen", "Marcus", "Tyree", "Devon", "Malik", "Xavier", "Isaiah", "Andre",
-    "Darius", "Cameron", "Elijah", "Trevon", "Kendrick", "Jamal", "Deshawn",
-    "Antoine", "Rashad", "Corey", "Terrence", "Jalen", "Buster", "Colt", "Spike",
-    "Dash", "Ace", "Mack", "Duke", "Rex", "Flash", "Zane",
-
+    "Jaylen", "Marcus", "Tyree", "Devon", "Malik", "Xavier", "Isaiah", "Andre", "Darius", "Cameron", 
+    "Elijah", "Trevon", "Kendrick", "Jamal", "Deshawn", "Antoine", "Rashad", "Corey", "Terrence", "Jalen", 
+    "Buster", "Colt", "Spike", "Dash", "Ace", "Mack", "Duke", "Rex", "Flash", "Zane",
     # --- Retro Bowl & Video Game Style ---
-    "Brick", "Blade", "Tank", "Diesel", "Laser", "Trigger", "Cruze", "Jax",
-    "Ryder", "Wilder", "Rocco", "Zeke", "Axel", "Striker", "Gunner", "Gage",
-    "Breaker", "Talon", "Knuckles", "Bane", "Riddick", "Shadow", "Titan",
-    "Ranger", "Hunter", "Maverick", "Chaz", "Jolt", "Kodiak", "Vance",
+    "Brick", "Blade", "Tank", "Diesel", "Laser", "Trigger", "Cruze", "Jax", "Ryder", "Wilder", 
+    "Rocco", "Zeke", "Axel", "Striker", "Gunner", "Gage", "Breaker", "Talon", "Knuckles", "Bane", 
+    "Riddick", "Shadow", "Titan", "Ranger", "Hunter", "Maverick", "Chaz", "Jolt", "Kodiak", "Vance", 
     "Bodie", "Riot", "Grit", "Flint", "Dash", "Talon", "Bolo", "Ruger",
-
+    "Buster", "Nitro", "Clutch", "Knox", "Chief", "Steel", "Rusty", "Rogue", "Mako", "Jaxson",
     # --- "Quantavious" & Elaborate Style ---
-    "Quantavious", "Javarious", "D'Marcus", "De'Gario", "Kevonte", "Tremandous",
-    "Marquise", "Jamarious", "Tequavious", "Ladarius", "Devonte", "Antavious",
-    "Jacquavious", "Quintavious", "D'Anfernee", "Tyquavious", "Montavious",
-    "Dontavious", "Rashardious", "Keyshawn", "Ja'Kobe", "Trevonte", "Deandreon",
-    "Sir'Dominic", "Tymarious", "Zaquavious", "Demarquise", "Brycen", "Kavion", "D'Vontay",
-    "Dreavious", "Kelavious", "Trayvond", "Maliquious", "Zavonte", "Kevondre"
+    "Quantavious", "Javarious", "D'Marcus", "De'Gario", "Kevonte", "Tremandous", "Marquise", "Jamarious", "Tequavious", "Ladarius", 
+    "Devonte", "Antavious", "Jacquavious", "Quintavious", "D'Anfernee", "Tyquavious", "Montavious", "Dontavious", "Rashardious", "Keyshawn", 
+    "Ja'Kobe", "Trevonte", "Deandreon", "Sir'Dominic", "Tymarious", "Zaquavious", "Demarquise", "Brycen", "Kavion", "D'Vontay", 
+    "Dreavious", "Kelavious", "Trayvond", "Maliquious", "Zavonte", "Kevondre",
+    "Trayveon", "De'Gentry", "D'Andre", "Marquavious", "Sir'Charles", "Javonte", "Kevontae", "Dashawn", "Za'Kari", "Tre'Shaun"
 ]
 
 LAST_NAMES = [
     # --- Original List ---
-    "Cross", "Vale", "Holloway", "Reeves", "Sinclair", "Boateng", "Marsh",
-    "Whitfield", "Okafor", "Prentice", "Larkin", "Bishop", "Calloway", "Marchetti",
-    "Osei", "Delgado", "Hargrove", "Winslow", "Beaumont", "Trask", "Sledge",
-    "Steele", "Gore", "Storm", "Gunn", "Blitz", "Cannon", "Stone", "Maddox", "Hardy",
-
+    "Cross", "Vale", "Holloway", "Reeves", "Sinclair", "Boateng", "Marsh", "Whitfield", "Okafor", "Prentice", 
+    "Larkin", "Bishop", "Calloway", "Marchetti", "Osei", "Delgado", "Hargrove", "Winslow", "Beaumont", "Trask", 
+    "Sledge", "Steele", "Gore", "Storm", "Gunn", "Blitz", "Cannon", "Stone", "Maddox", "Hardy",
     # --- Retro Bowl & Video Game Style ---
-    "Iron", "Hammer", "Slaughter", "Powers", "Savage", "Grizzly", "Bullet",
-    "Danger", "Wolf", "Brawler", "Frost", "Rage", "Bane", "Thunder", "Havoc",
-    "Maverick", "Titan", "Viper", "Garrison", "Colt", "Ryder", "Crossfire",
-    "Wild", "Blaze", "Flint", "Steel", "Brimstone", "Locke", "Chief", "Striker",
+    "Iron", "Hammer", "Slaughter", "Powers", "Savage", "Grizzly", "Bullet", "Danger", "Wolf", "Brawler", 
+    "Frost", "Rage", "Bane", "Thunder", "Havoc", "Maverick", "Titan", "Viper", "Garrison", "Colt", 
+    "Ryder", "Crossfire", "Wild", "Blaze", "Flint", "Steel", "Brimstone", "Locke", "Chief", "Striker", 
     "Overkill", "Wildcat", "Rex", "Rumble", "Talon", "Blackwood", "Frost", "Grimm",
-
+    "Razor", "Briggs", "Outlaw", "Rucker", "Apex", "Goliath", "Vandal", "Hulk", "Prey", "Malice",
     # --- Elaborate & Generated Style ---
-    "Cunningham", "Washington", "Livingston", "Richardson", "Drummond", "Covington",
-    "Valentin", "McDaniels", "Barrington", "Davenport", "Goldwire", "Blackshear",
-    "Kingsley", "Archibald", "Taliaferro", "Pendergast", "Fontenot", "Gallagher",
-    "Fitzroy", "Moncrief", "Bridgewater", "Harrington", "Ellington", "Kennington"
+    "Cunningham", "Washington", "Livingston", "Richardson", "Drummond", "Covington", "Valentin", "McDaniels", "Barrington", "Davenport", 
+    "Goldwire", "Blackshear", "Kingsley", "Archibald", "Taliaferro", "Pendergast", "Fontenot", "Gallagher", "Fitzroy", "Moncrief", 
+    "Bridgewater", "Harrington", "Ellington", "Kennington",
+    "Montgomery", "Pendleton", "Abernathy", "Kensington", "Blackwood", "Vanderbilt", "Westminster", "Beauregard", "Fairchild", "Fitzgerald"
 ]
+
 
 TRAIT_POOL = [
     "Athletic", "Mobile", "Leader", "High IQ", "Streaky", "Undersized",
@@ -96,6 +90,25 @@ ROUND_SCORE_WEIGHT = 5
 STREAK_BONUS_BASE = 50
 STREAK_BONUS_PER_EXTRA = 15
 
+ROOKIE_CONTRACT_YEARS = 4
+
+def make_player(ovr, age, potential=None, profile=None, origin="", salary=None, contract_years=None):
+    profile = profile or generate_prospect_profile()
+    return {
+        "name": profile["name"],
+        "position": profile["position"],
+        "height": profile["height"],
+        "weight": profile["weight"],
+        "traits": profile["traits"],
+        "age": age,
+        "ovr": ovr,
+        "potential": potential if potential is not None else min(99, ovr + random.randint(0, 12)),
+        "origin": origin,
+        "injury_note": None,
+        "salary": salary if salary is not None else salary_for_ovr(ovr),
+        "contract_years": contract_years if contract_years is not None else random.randint(1, 3),
+    }
+
 def _rounds_won(season):
     """How many playoff rounds a season actually won, not just whether
     it made the playoffs — a Conference Finals loss should score higher
@@ -124,28 +137,63 @@ def compute_legacy_score(history, fan_support, hot_seat, chemistry, max_streak):
     return max(0, win_points + playoff_points + finale_bonus + streak_bonus)
 
 SLANDER_BEST = [
-    "{name} threw a party the night before a back-to-back and the whole team knew about it by morning.",
-    "{name} told a reporter he could \"do this in his sleep.\" Local radio has not let it go.",
     "{name} showed up to shootaround in a coat that cost more than three bench salaries combined.",
     "Ticket resale prices spike every time {name} is questionable. Scalpers love him more than fans do.",
-    "{name} was overheard ordering the most expensive thing on the menu and tipping 9%.",
+    "{name} was overheard ordering the most expensive thing on the menu and tipping 25%.",
     "Drake shouted out {name} in his newest song: \"I don't need no help, I got {name} on my team.\"",
     "{name} was spotted at a local bar with a \"Free Agent of the Year\" sash. He was alone.",
     "{name} was seen at a local charity event, but he was only there for the free food.",
+    "{name} missed practice because he was busy attending the Met Gala.",
+    "{name} spent halftime looking at his own stat line on his phone instead of listening to the adjustments.",
+    "{name} hosted a massive yacht party the night before a game, then claimed he was out with 'flu-like symptoms.'",
+    "{name} posted a cryptic, emoji-filled quote on his story right after a 20-point blowout loss.",
 ]
 SLANDER_WORST = [
-    "{name} got benched and the PA \"accidentally\" played a sad trombone. Ownership is investigating who authorized that.",
+    "{name} got benched and the PA \"accidentally\" played a sad trombone.",
     "A kid asked {name} for an autograph and threw it in the trash in front of him.",
     "{name}'s jersey has been the only one on the clearance rack for six months straight.",
     "The scoreboard operator looped {name}'s worst play of the season during a TV timeout. Twice.",
     "Local sports radio has a running bit where they just sigh whenever {name}'s name comes up.",
-    "A popular sports analyst said if {name} were a car, he'd be a Yugo. The team is considering legal action.",
+    "A popular sports analyst said if {name} were a car, he'd be a Yugo.",
     "The following tweet went viral: If I was in a room with a glass of water in my hand and {name} was on fire, I would drink the water and punch him.",
     "Lana Del Rey tweeted that {name} is \"the worst thing to happen to basketball since the shot clock.\"",
     "A local bar is offering a free drink to anyone who can name a single good thing about {name}.",
-    "A local sports radio host said {name} is \"the kind of player who makes you miss the guy he replaced.\"",
     "Fans made a Wiggle.ai video of {name} speaking Chinese; the Guangzhou Loong Lions offered him a contract the next day. He declined.",
     "The local McDonalds reportedly reached out to {name} for a new job. No info at this moment on his decision.",
+]
+
+NEWSPAPER_HEADLINES_BY_ROUND_LOST = {
+    "Conference Finals": [
+        {"headline": "{team} FALL ONE STEP SHORT",
+         "subhead": "A trip to the Conference Finals ends in heartbreak. Will they get over the hump next year?"},
+        {"headline": "SO CLOSE, YET SO FAR",
+         "subhead": "{team} exit in the Conference Finals again. The city is starting to wonder if this is as far as it goes."},
+    ],
+    "Finals": [
+        {"headline": "{team} COME UP SHORT IN THE FINALS",
+         "subhead": "A trip to the championship ends without the trophy. The window is still open, for now."},
+        {"headline": "HEARTBREAK ON THE BIGGEST STAGE",
+         "subhead": "{team} reach the Finals and lose. A parade will have to wait another year."},
+    ],
+    "Round 2": [
+        {"headline": "{team} BOUNCED IN ROUND 2",
+         "subhead": "A promising season ends earlier than hoped."},
+        {"headline": "PLAYOFF DREAMS DASHED",
+         "subhead": "{team} fail to advance past the second round."},
+    ],
+    "Round 1": [
+        {"headline": "{team} OUT IN THE FIRST ROUND",
+         "subhead": "A quick playoff exit leaves plenty of questions this offseason."},
+        {"headline": "FIRST ROUND FIASCO",
+         "subhead": "{team} fail to advance past the first round."},
+    ],
+}
+
+MISSED_PLAYOFFS_HEADLINES = [
+    ("{team} MISS THE PLAYOFFS", "Another season on the outside looking in. The rebuild continues."),
+    ("{team} FAIL TO MAKE THE PLAYOFFS", "A disappointing season ends without a playoff berth. The team will need to regroup."),
+    ("{team} OUT OF CONTENTION", "The season ends with {team} missing the playoffs. Fans are left wondering what's next."),
+    ("What are the playoffs? {team} doesn't know."),
 ]
 
 NOTE_MEDIA_PATTERNS = [
@@ -184,18 +232,31 @@ def _note_media_items(notes, team_theme_data):
 def _headline_for(name, pool):
     return random.choice(pool).format(name=name)
 
-def generate_media_bundle(roster, team_name, season_result):
+NEWSPAPER_MASTHEAD_SUFFIXES = [
+    "TIMES", "HERALD", "TRIBUNE", "GAZETTE", "CHRONICLE", "POST",
+    "LEDGER", "DAILY", "OBSERVER", "STAR", "COURIER", "SENTINEL",
+]
+
+def _newspaper_masthead(city):
+    return f"{city.upper()} {random.choice(NEWSPAPER_MASTHEAD_SUFFIXES)}"
+
+def generate_media_bundle(roster, city, team_name, season_result, used_slander_lines=None):
+    if used_slander_lines is None:
+        used_slander_lines = []
     ranked = sorted((s["player"] for s in roster if s["player"]), key=lambda p: p["ovr"], reverse=True)
     theme = team_theme(team_name)
+    masthead = _newspaper_masthead(city)
     items = []
 
     if ranked:
         best, worst = ranked[0], ranked[-1]
+        best_template = _pick_unused(SLANDER_BEST, used_slander_lines)
         items.append({"type": "headline", "tone": "slander",
-                       "headline": _headline_for(best["name"], SLANDER_BEST), "team_theme": theme})
+                       "headline": best_template.format(name=best["name"]), "team_theme": theme})
         if worst is not best:
+            worst_template = _pick_unused(SLANDER_WORST, used_slander_lines)
             items.append({"type": "headline", "tone": "slander",
-                           "headline": _headline_for(worst["name"], SLANDER_WORST), "team_theme": theme})
+                           "headline": worst_template.format(name=worst["name"]), "team_theme": theme})
 
     injured = [s["player"] for s in roster if s["player"] and s["player"].get("injury_note")]
     if injured:
@@ -203,7 +264,7 @@ def generate_media_bundle(roster, team_name, season_result):
         items.append({
             "type": "tweet",
             "handle": f"@{team_name.replace(' ', '')}Hoops",
-            "text": f"Injury report: {p['name']} — {p['injury_note']}",
+            "text": f"Injury report: {p['name']} \u2014 {p['injury_note']}",
             "team_theme": theme,
         })
 
@@ -219,15 +280,30 @@ def generate_media_bundle(roster, team_name, season_result):
     if season_result.get("champion"):
         items.append({
             "type": "newspaper",
+            "masthead": masthead,
             "headline": f"{team_name.upper()} ARE CHAMPIONS",
             "subhead": f"{season_result.get('finals_mvp', 'Your star')} named Finals MVP after "
                        f"a {season_result.get('series_score', '')} series win over "
                        f"the {season_result.get('opponent_name', 'the league')}.",
             "team_theme": theme,
         })
+    else:
+        result_text = season_result.get("result", "")
+        if not season_result.get("made_playoffs"):
+            pool = MISSED_PLAYOFFS_HEADLINES
+        else:
+            round_lost = result_text.replace("Lost in ", "")
+            pool = NEWSPAPER_HEADLINES_BY_ROUND_LOST.get(round_lost)
+        if pool:
+            chosen = random.choice(pool)
+            items.append({
+                "type": "newspaper",
+                "masthead": masthead,
+                "headline": chosen["headline"].format(team=team_name.upper()),
+                "subhead": chosen["subhead"].format(team=team_name),
+                "team_theme": theme,
+            })
 
-    # New — ticker coverage pulled from whatever actually happened this
-    # season, instead of hand-written copy per situation.
     items += _note_media_items(season_result.get("notes", []), theme)
 
     return items
@@ -362,13 +438,12 @@ DECENT_FLAVOR = [
     "The arena's still mostly full. For now.",
     "Local radio is calling for a few changes. Just a few.",
     "Local schools are holding pep rallies for the team. That's a good sign.",
-    "The team is so average that the city is whelmed."
+    "The team is so average that the city is whelmed.",
     "Fans are already checking the playoff bubble standings with mild confusion.",
     "The team slogan this year is: We are technically competing.",
     "The post-game show spent twenty minutes discussing the parking lot traffic.",
-
-
 ]
+
 BAD_FLAVOR = [
     "Ownership is \u201cexploring all options,\u201d which is never good.",
     "Tickets are basically free at this point.",
@@ -386,16 +461,19 @@ BAD_FLAVOR = [
 ]
 
 OPPONENT_CITIES = [
-    "Moscow", "Libjuana", "Basel", "Tundra City", "Port Halloway",
-    "New Cascadia", "Redstone", "Vantage", "Ashport", "Cobalt Bay",
-    "Glasswing", "Hartford Falls", "Northgate", "Silvermine", "Eastpoint",
-    "Quicksilver", "Ironwood", "Frosthaven", "Shadowport", "Rivermouth",
+    "Moscow", "Libjuana", "Basel", "Tundra City", "Port Halloway", "New Cascadia", "Redstone", "Vantage", "Ashport", "Cobalt Bay", 
+    "Glasswing", "Hartford Falls", "Northgate", "Silvermine", "Eastpoint", "Quicksilver", "Ironwood", "Frosthaven", "Shadowport", "Rivermouth",
+    "Rustbury", "Neon Oasis", "Copper Canyon", "Apex Ridge", "Sable Crest", "Glitch City", "Galloways End", "Deepwater", "Basalt Creek", "Gridlock",
+    "Prism Valley", "Onyx Point", "Brimstone Bay", "Whiteout", "Hollow Creek", "Timberline", "Vector City", "Blackwood", "Cinder Falls", "Titan Ridge"
 ]
+
 OPPONENT_NICKNAMES = [
-    "Cows", "Laptops", "Wolves", "Ironclads", "Marauders", "Static",
-    "Vultures", "Anchors", "Foghorns", "Longshots", "Renegades",
-    "Comets", "Drifters", "Watchmen", "Outlaws", "Sentinels", "Ravens", "Hawks", "Titans", "Vipers",
+    "Cows", "Laptops", "Wolves", "Ironclads", "Marauders", "Static", "Vultures", "Anchors", "Foghorns", "Longshots", 
+    "Renegades", "Comets", "Drifters", "Watchmen", "Outlaws", "Sentinels", "Ravens", "Hawks", "Titans", "Vipers",
+    "Gargoyles", "Keyboards", "Phantoms", "Reapers", "Sirens", "Jackals", "Locomotives", "Highbeams", "Hazards", "Rookies",
+    "Code", "Scorpions", "Cyclones", "Rustlers", "Spiders", "Barons", "Drones", "Blizzards", "Chameleons", "Wreckers"
 ]
+
 
 FIRST_NAME_HEADLINE_TAKES = [
     "is a flat earther",
@@ -440,7 +518,7 @@ def generate_prospect_profile():
     }
 
 
-def make_player(ovr, age, potential=None, profile=None, origin="", salary=None):
+def make_player(ovr, age, potential=None, profile=None, origin="", salary=None, contract_years=None):
     profile = profile or generate_prospect_profile()
     return {
         "name": profile["name"],
@@ -454,6 +532,7 @@ def make_player(ovr, age, potential=None, profile=None, origin="", salary=None):
         "origin": origin,
         "injury_note": None,
         "salary": salary if salary is not None else salary_for_ovr(ovr),
+        "contract_years": contract_years if contract_years is not None else random.randint(1, 3),
     }
 
 
@@ -695,7 +774,7 @@ def generate_free_agent_options(cap_space_amount, philosophy=None):
             "label": f"Sign {profile['name']}",
             "blurb": f"{ovr} OVR {profile['position']} \u00b7 asking ${salary}M / {years}"
             f" yr{'s' if years > 1 else ''}.",
-            "prospect": {**profile, "ovr_hint": ovr},
+            "prospect": {**profile, "ovr_hint": ovr, "contract_years": years},
         })
     return options
 
@@ -869,12 +948,14 @@ def _resolve_draft_choice(choice_id, prospect):
     if choice_id == "trade_for_veteran":
         ovr = random.randint(78, 85)
         potential = ovr
+        contract_years = random.randint(1, 3)
     else:
         arch = next(a for a in DRAFT_ARCHETYPES if a["id"] == choice_id)
         lo, hi = arch["ovr_range"]
         ovr = random.randint(lo, hi)
         ovr = max(35, min(99, ovr + prospect.get("draft_class_ovr_bonus", 0)))
         potential = min(99, ovr + random.randint(*arch["potential_bonus_range"]))
+        contract_years = ROOKIE_CONTRACT_YEARS
 
     origin = prospect.get("origin", "")
     if choice_id == "old_man_knees":
@@ -885,6 +966,7 @@ def _resolve_draft_choice(choice_id, prospect):
         "weight": prospect["weight"], "traits": prospect["traits"], "age": prospect["age"],
         "ovr": ovr, "potential": potential, "origin": origin,
         "injury_note": None, "salary": salary_for_ovr(ovr),
+        "contract_years": contract_years,
     }
 
 
@@ -999,6 +1081,7 @@ def resolve_offseason_choice(
                 "weight": prospect["weight"], "traits": prospect["traits"], "age": prospect["age"],
                 "ovr": ovr, "potential": ovr, "origin": "Trade", "injury_note": None,
                 "salary": salary_for_ovr(ovr),
+                "contract_years": random.randint(1, 3),
             }
             target = _target_slot_for_position(roster, new_player["position"], protected_slots)
             old = target["player"]
@@ -1029,6 +1112,7 @@ def resolve_offseason_choice(
         old = target["player"]
         new_player = make_player(
             ovr=prospect.get("ovr_hint", 65), age=prospect["age"], profile=prospect, origin="Free Agency",
+            contract_years=prospect.get("contract_years"),
         )
         target["player"] = new_player
         changed_slot = target["slot"]
@@ -1098,6 +1182,8 @@ def age_and_develop(roster, philosophy=None):
             continue
 
         p["age"] += 1
+        if p.get("contract_years") is not None:
+            p["contract_years"] = max(0, p["contract_years"] - 1)
 
         if p["age"] >= RETIREMENT_AGE_FLOOR:
             retire_chance = min(0.6, 0.10 + (p["age"] - RETIREMENT_AGE_FLOOR) * 0.08)
@@ -1212,28 +1298,46 @@ def _finals_spectacle(roster):
     }
 
 
-def _flavor_note(season_result, roster, last_flavor=None):
+def _pick_unused(pool, used_keys, key_fn=lambda x: x):
+    """Picks an item from pool whose key hasn't been used yet this game.
+    Once every item in this exact pool has been used, forgets just this
+    pool's keys (not any other pool's) and reshuffles, so nothing repeats
+    until the whole set has actually been seen once."""
+    pool_keys = {key_fn(item) for item in pool}
+    remaining = [item for item in pool if key_fn(item) not in used_keys]
+    if not remaining:
+        used_keys[:] = [k for k in used_keys if k not in pool_keys]
+        remaining = pool
+    chosen = random.choice(remaining)
+    used_keys.append(key_fn(chosen))
+    return chosen
+
+CHAMPION_FLAVOR_TEMPLATES = [
+    "The parade route is already blocked off downtown \u2014 {name} leads the celebration.",
+    "Ownership quietly orders a bigger trophy case for the {name}-led champions.",
+    "Local news leads with you for a change, {name} on every front page.",
+    "Fans are already petitioning for a statue of {name} outside the arena.",
+    "Jimmy Fallon wants {name} on his show. He says he has a great sense of humor.",
+    "Kevin Durant tweets that {name} is the best player in the league and he wants to play for you.",
+    "The President calls to congratulate {name} and the team on a championship season.",
+    "The team is invited to the White House, and {name} gives a speech about teamwork and perseverance.",
+]
+
+def _flavor_note(season_result, roster, used_flavor_lines=None):
+    if used_flavor_lines is None:
+        used_flavor_lines = []
+
     if season_result["champion"]:
         best = max((s["player"] for s in roster if s["player"]), key=lambda p: p["ovr"], default=None)
         name = best["name"] if best else "the whole roster"
-        pool = [
-            f"The parade route is already blocked off downtown \u2014 {name} leads the celebration.",
-            f"Ownership quietly orders a bigger trophy case for the {name}-led champions.",
-            f"Local news leads with you for a change, {name} on every front page.",
-            f"Fans are already petitioning for a statue of {name} outside the arena.",
-            f"Jimmy Fallon wants {name} on his show. He says he has a great sense of humor.",
-            f"Kevin Durant tweets that {name} is the best player in the league and he wants to play for you.",
-        ]
+        template = _pick_unused(CHAMPION_FLAVOR_TEMPLATES, used_flavor_lines)
+        return template.format(name=name)
     elif season_result["made_playoffs"]:
-        pool = PLAYOFF_FLAVOR
+        return _pick_unused(PLAYOFF_FLAVOR, used_flavor_lines)
     elif season_result["wins"] >= 32:
-        pool = DECENT_FLAVOR
+        return _pick_unused(DECENT_FLAVOR, used_flavor_lines)
     else:
-        pool = BAD_FLAVOR
-
-    choices = [line for line in pool if line != last_flavor] or pool
-    return random.choice(choices)
-
+        return _pick_unused(BAD_FLAVOR, used_flavor_lines)
 
 def _fan_support_delta(season_result):
     if season_result["champion"]:
@@ -1264,21 +1368,21 @@ FA_DEPARTURE_OVR_FLOOR = 88
 FA_DEPARTURE_BASE_CHANCE = 0.05
 
 def _fa_poaching_departures(roster, philosophy=None):
-    """Season-end chance a bona fide star walks for more money elsewhere.
-    No user choice, same beat as retirement — it just happens and the
-    note says so. Only fires on players good enough to have real market
-    demand and young enough that it isn't just a retirement in disguise."""
     departures = []
     for slot in roster:
         p = slot["player"]
         if p is None or p["ovr"] < FA_DEPARTURE_OVR_FLOOR or p["age"] >= RETIREMENT_AGE_FLOOR:
             continue
+        if p.get("contract_years", 0) > 0:
+            continue
         chance = FA_DEPARTURE_BASE_CHANCE + max(0, p["ovr"] - FA_DEPARTURE_OVR_FLOOR) * 0.01
         if philosophy == "small_market":
-            chance += 0.05  # can't hold onto stars once they're proven
+            chance += 0.05
         if random.random() < chance:
             departures.append({"name": p["name"], "ovr": p["ovr"], "position": p["position"]})
             slot["player"] = None
+        else:
+            p["contract_years"] = random.randint(2, 4)
     return departures
 
 def team_theme(team_name):
@@ -1603,7 +1707,7 @@ SITUATIONS = [
              "effects": {"fan_support": 3, "hot_seat": -4, "chemistry": 2}},
             {"id": "wait_for_facts", "label": "Wait for the Facts",
              "blurb": "Due process, but the longer he's around the worse the optics get.",
-             "effects": {"fan_support": -8, "hot_seat": 14, "chemistry": -4}},
+             "effects": {"fan_support": -24, "hot_seat": 14, "chemistry": -4}},
         ],
     },
     {
@@ -1631,7 +1735,7 @@ SITUATIONS = [
              "effects": {"fan_support": 5, "hot_seat": -3, "chemistry": 4}},
             {"id": "pass", "label": "Keep the Cap Flexibility",
              "blurb": "He signs elsewhere for full price. You keep your options open.",
-             "effects": {"fan_support": -4, "hot_seat": 2}},
+             "effects": {"fan_support": -14, "hot_seat": 2}},
         ],
     },
     {
@@ -1642,7 +1746,7 @@ SITUATIONS = [
         "options": [
             {"id": "sit_him", "label": "Sit Him",
              "blurb": "Protect him for the long run. A lot of fans paid to see him play tonight.",
-             "effects": {"fan_support": -8, "hot_seat": 3}},
+             "effects": {"fan_support": -18, "hot_seat": 10}},
             {"id": "play_him", "label": "Play Him",
              "blurb": "Give the fans their money's worth and hope nothing gets worse.",
              "effects": {"fan_support": 6, "hot_seat": -1}},
@@ -1659,7 +1763,7 @@ SITUATIONS = [
              "effects": {"fan_support": 2, "hot_seat": 1}},
             {"id": "block_it", "label": "Block the Request",
              "blurb": "You keep your staff intact. Word gets around about how you handled it.",
-             "effects": {"fan_support": -3, "hot_seat": -2, "chemistry": -2}},
+             "effects": {"fan_support": -12, "hot_seat": -2, "chemistry": -8}},
         ],
     },
     {
@@ -1674,7 +1778,7 @@ SITUATIONS = [
              "effects": {"chemistry": 5, "hot_seat": 1}},
             {"id": "keep_minutes", "label": "Keep the Veteran on the Floor",
              "blurb": "You need him playing, not coaching. The headache stays a headache.",
-             "effects": {"chemistry": -3, "fan_support": 1}},
+             "effects": {"chemistry": -12, "fan_support": 1}},
         ],
     },
     {
@@ -1686,7 +1790,7 @@ SITUATIONS = [
             {"id": "raise_prices", "label": "Raise the Prices",
              "blurb": "Ownership makes real money. Longtime fans get priced out of the run "
              "they helped build toward.",
-             "effects": {"fan_support": -10, "hot_seat": -8}},
+             "effects": {"fan_support": -30, "hot_seat": -8}},
             {"id": "hold_the_line", "label": "Hold the Line on Price",
              "blurb": "You leave money on the table. Ownership notices.",
              "effects": {"fan_support": 6, "hot_seat": 6}},
@@ -1704,7 +1808,7 @@ SITUATIONS = [
              "effects": {"fan_support": 7, "hot_seat": 6}},
             {"id": "take_the_loss", "label": "Take the Loss Quietly",
              "blurb": "You don't give the league a reason to remember your name.",
-             "effects": {"fan_support": -3, "hot_seat": -3}},
+             "effects": {"fan_support": -12, "hot_seat": -3}},
         ],
     },
     {
@@ -1721,7 +1825,7 @@ SITUATIONS = [
             {"id": "not_yet", "label": "Not Yet",
              "blurb": "You tell the fans it isn't the right time. Some of them take that "
              "personally.",
-             "effects": {"fan_support": -5}},
+             "effects": {"fan_support": -15}},
         ],
     },
     {
@@ -1735,7 +1839,7 @@ SITUATIONS = [
              "effects": {"fan_support": -2, "hot_seat": -1}},
             {"id": "admit_missed_it", "label": "Admit You Should Have Done More",
              "blurb": "Honest, but it doesn't exactly inspire confidence going forward.",
-             "effects": {"fan_support": -5, "hot_seat": 4}},
+             "effects": {"fan_support": -25,"hot_seat": 4}},
         ],
     },
     {
@@ -1813,7 +1917,7 @@ REPORTER_QUESTIONS = [
         "from the deep state\u2019 and he's flushing his down the toilet. Your thoughts?\u201d",
         "options": [
             {"id": "agree_deep_state", "label": "\u201cHe Might Be Onto Something\u201d",
-             "blurb": "You look directly into the camera and squint. The league office "
+             "blurb": "You look directly into the camera. The league office "
              "fines you $50k before you leave the podium.",
              "effects": {"fan_support": 14, "hot_seat": 18}},
             {"id": "buy_new_ring", "label": "\u201cWe'll Order Him a Plastic One\u201d",
@@ -1907,13 +2011,13 @@ REPORTER_QUESTIONS = [
         "id": "finals_coaching_credit",
         "requires_player": False,
         "requires_champion": True,
-        "prompt": "Reporter Skip Scowl smiles thinly: “Now that you've won the title, some analysts are saying this roster was so stacked a golden retriever could have coached them to a ring. How much of this trophy belongs to your tactical schemes?”",
+        "prompt": "Reporter Skip Scowl asks: “Now that you've won the title, some analysts are saying this roster was so stacked a golden retriever could have coached them to a ring. How much of this trophy belongs to you”",
         "options": [
             {
                 "id": "take_credit",
                 "label": "“The X's and O's Don't Draw Themselves”",
                 "blurb": "You demand your respect. The local media labels you an egomaniac before midnight.",
-                "effects": {"fan_support": -3, "hot_seat": 10}
+                "effects": {"fan_support": -12,"hot_seat": 10}
             },
             {
                 "id": "credit_players",
@@ -1989,7 +2093,10 @@ def _build_situation_payload(template, context):
 
 
 def maybe_generate_situation(roster, fan_support, hot_seat, champion=False, finals_mvp_name=None,
-                              philosophy=None, last_situation_id=None):
+                              philosophy=None, used_situation_ids=None):
+    if used_situation_ids is None:
+        used_situation_ids = []
+
     has_player = any(slot["player"] for slot in roster)
     ranked = sorted(
         (slot["player"] for slot in roster if slot["player"]),
@@ -2003,8 +2110,7 @@ def maybe_generate_situation(roster, fan_support, hot_seat, champion=False, fina
 
     if champion:
         champion_only = [q for q in REPORTER_QUESTIONS if q.get("requires_champion")]
-        candidates = [q for q in champion_only if q["id"] != last_situation_id] or champion_only
-        template = random.choice(candidates)
+        template = _pick_unused(champion_only, used_situation_ids, key_fn=lambda t: t["id"])
         context = {"player_name": finals_mvp_name or "your best player"}
         return _build_situation_payload(template, context)
 
@@ -2012,6 +2118,8 @@ def maybe_generate_situation(roster, fan_support, hot_seat, champion=False, fina
     if phil_info.get("star_flight_risk") and best_player and best_player["ovr"] >= 85:
         if random.random() < 0.3:
             template = next(s for s in SITUATIONS if s["id"] == "trade_demand")
+            if "trade_demand" not in used_situation_ids:
+                used_situation_ids.append("trade_demand")
             context = {"player_name": best_player["name"]}
             return _build_situation_payload(template, context)
 
@@ -2021,8 +2129,6 @@ def maybe_generate_situation(roster, fan_support, hot_seat, champion=False, fina
         pool = SITUATIONS
 
     def is_eligible(s):
-        if s["id"] == last_situation_id:
-            return False
         if s.get("requires_player") and not has_player:
             return False
         if s.get("requires_best_player") and not best_player:
@@ -2037,11 +2143,10 @@ def maybe_generate_situation(roster, fan_support, hot_seat, champion=False, fina
     if not eligible:
         eligible = [s for s in SITUATIONS if is_eligible(s)]
     if not eligible:
-        # last resort — allow repeats rather than crash if literally nothing else qualifies
         eligible = [s for s in SITUATIONS if not s.get("requires_player") and not s.get("requires_best_player")
                     and not s.get("requires_second_best_player") and not s.get("requires_knees_player")]
 
-    template = random.choice(eligible)
+    template = _pick_unused(eligible, used_situation_ids, key_fn=lambda t: t["id"])
     context = {}
     if template.get("requires_best_player"):
         context["player_name"] = best_player["name"]
@@ -2243,12 +2348,13 @@ def new_game(city="", team_name="", philosophy="win_now"):
         "hot_seat": 20,
         "chemistry": 65,
         "draft_class": draft_class,
-        "last_flavor": None,
         "history": [],
         "streak": 0,
         "max_streak": 0,
-        "last_situation_id": None,
         "seasons_since_depth_investment": 0,
+        "used_situation_ids": [],
+        "used_flavor_lines": [],
+        "used_slander_lines": [],
     }
     decision = {
         "season_number": 1, "pick_number": 1,
@@ -2259,8 +2365,7 @@ def new_game(city="", team_name="", philosophy="win_now"):
 
 def advance_dynasty(state, choices):
     """`choices` is a list of 0+ option objects the frontend displayed and
-    the player selected this offseason — e.g. [draft_pick_option,
-    free_agent_option]. Each is applied in order via
+    the player selected this offseason. Each is applied in order via
     resolve_offseason_choices."""
     roster = state["roster"]
     depth_rating = state["depth_rating"]
@@ -2306,15 +2411,21 @@ def advance_dynasty(state, choices):
     season_result["hot_seat"] = hot_seat
     season_result["cap_space"] = end_of_season_cap_space
 
-    flavor = _flavor_note(season_result, roster, last_flavor=state.get("last_flavor"))
+    used_flavor_lines = state.get("used_flavor_lines", [])
+    flavor = _flavor_note(season_result, roster, used_flavor_lines=used_flavor_lines)
+
     extra_notes = [flavor]
     if over_cap > 0:
-        extra_notes.append(f"You're ${over_cap:.1f}M over the cap — ownership isn't thrilled about the tax bill.")
+        extra_notes.append(f"You're ${over_cap:.1f}M over the cap. Ownership isn't thrilled about the tax bill.")
     if hot_seat >= 80:
         extra_notes.append("Ownership is one bad month from a change.")
     season_result["notes"] = offseason_notes + season_result["notes"] + extra_notes
 
-    season_result["media"] = generate_media_bundle(roster, state["team_name"], season_result)
+    used_slander_lines = state.get("used_slander_lines", [])
+    season_result["media"] = generate_media_bundle(
+        roster, state["city"], state["team_name"], season_result,
+        used_slander_lines=used_slander_lines,
+    )
 
     streak = state["streak"] + 1 if season_result["champion"] else 0
     max_streak = max(state.get("max_streak", 0), streak)
@@ -2335,11 +2446,13 @@ def advance_dynasty(state, choices):
         "hot_seat": hot_seat,
         "chemistry": chemistry,
         "draft_class": next_draft_class,
-        "last_flavor": flavor,
         "history": history,
         "streak": streak,
         "max_streak": max_streak,
         "seasons_since_depth_investment": seasons_since_depth_investment,
+        "used_situation_ids": state.get("used_situation_ids", []),
+        "used_flavor_lines": used_flavor_lines,
+        "used_slander_lines": used_slander_lines,
     }
 
     next_decision = None
@@ -2360,6 +2473,7 @@ def advance_dynasty(state, choices):
         champion=season_result["champion"],
         finals_mvp_name=season_result.get("finals_mvp"),
         philosophy=philosophy,
+        used_situation_ids=new_state["used_situation_ids"],
     )
 
     legacy_score = None
