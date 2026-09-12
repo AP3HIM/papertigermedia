@@ -1,0 +1,15 @@
+.ptm-share-button {
+  font-family: var(--ptm-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  background: var(--ptm-black, #111);
+  color: var(--ptm-off-white, #f7f3ea);
+  border: none;
+  padding: 0.7rem 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.ptm-share-button:hover {
+  background: var(--ptm-orange, #c85a1e);
+}

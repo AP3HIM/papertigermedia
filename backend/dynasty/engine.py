@@ -91,6 +91,38 @@ POSITION_FULL_COVERAGE_BONUS = 2
 POSITION_STACK_THRESHOLD = 3
 POSITION_STACK_PENALTY_PER_PLAYER = 4
 
+WIN_SCORE_WEIGHT = 0.5
+ROUND_SCORE_WEIGHT = 5
+STREAK_BONUS_BASE = 50
+STREAK_BONUS_PER_EXTRA = 15
+
+def _rounds_won(season):
+    """How many playoff rounds a season actually won, not just whether
+    it made the playoffs — a Conference Finals loss should score higher
+    than a Round 1 exit even with the same win total."""
+    if season.get("champion"):
+        return len(PLAYOFF_ROUNDS)
+    if not season.get("made_playoffs"):
+        return 0
+    round_name = season["result"].replace("Lost in ", "")
+    try:
+        return PLAYOFF_ROUNDS.index(round_name)
+    except ValueError:
+        return 0
+
+def compute_legacy_score(history, fan_support, hot_seat, chemistry, max_streak):
+    """A single sayable number summarizing a completed 10-season dynasty.
+    Deliberately kept in the low hundreds for a mediocre run up to
+    roughly 900-1000 for a historically dominant one, so it's a number
+    someone can say out loud and compare with a friend."""
+    win_points = sum(round(h["wins"] * WIN_SCORE_WEIGHT) for h in history)
+    playoff_points = sum(_rounds_won(h) * ROUND_SCORE_WEIGHT for h in history)
+    finale_bonus = round((fan_support + chemistry + (100 - hot_seat)) / 3)
+    streak_bonus = 0
+    if max_streak >= 3:
+        streak_bonus = STREAK_BONUS_BASE + (max_streak - 3) * STREAK_BONUS_PER_EXTRA
+    return max(0, win_points + playoff_points + finale_bonus + streak_bonus)
+
 SLANDER_BEST = [
     "{name} threw a party the night before a back-to-back and the whole team knew about it by morning.",
     "{name} told a reporter he could \"do this in his sleep.\" Local radio has not let it go.",
@@ -116,13 +148,43 @@ SLANDER_WORST = [
     "The local McDonalds reportedly reached out to {name} for a new job. No info at this moment on his decision.",
 ]
 
+NOTE_MEDIA_PATTERNS = [
+    ("retires", "@LeagueInsider", "RETIREMENT WATCH: {note}"),
+    ("joins the roster", "@RosterMoves", "TRANSACTION: {note}"),
+    ("signs as a free agent", "@RosterMoves", "TRANSACTION: {note}"),
+    ("trade goes through", "@TradeCentral", "TRADE ALERT: {note}"),
+    ("The trade lands", "@TradeCentral", "TRADE ALERT: {note}"),
+    ("over the cap", "@LeagueOffice", "LUXURY TAX WATCH: {note}"),
+    ("Ownership is one bad month", "@InsideTheFranchise", "{note}"),
+    ("breaks out", "@LeagueInsider", "BREAKOUT ALERT: {note}"),
+]
+NOTE_MEDIA_MAX_ITEMS = 3
+
+def _note_media_items(notes, team_theme_data):
+    """Scans season notes for patterns worth turning into a tweet card,
+    instead of hand-authoring copy per situation_id. New situations get
+    ticker coverage automatically as long as their note text matches one
+    of these patterns — nothing here needs updating when a new situation
+    is added to SITUATIONS/REPORTER_QUESTIONS."""
+    items = []
+    for note in notes:
+        for keyword, handle, template in NOTE_MEDIA_PATTERNS:
+            if keyword in note:
+                items.append({
+                    "type": "tweet",
+                    "handle": handle,
+                    "text": template.format(note=note),
+                    "team_theme": team_theme_data,
+                })
+                break
+        if len(items) >= NOTE_MEDIA_MAX_ITEMS:
+            break
+    return items
+
 def _headline_for(name, pool):
     return random.choice(pool).format(name=name)
 
 def generate_media_bundle(roster, team_name, season_result):
-    """Structured 'this world is alive' content. Pure data — no images
-    generated server-side. Frontend renders each item by `type` using
-    team_theme() for colors, so nothing here is hand-designed per team."""
     ranked = sorted((s["player"] for s in roster if s["player"]), key=lambda p: p["ovr"], reverse=True)
     theme = team_theme(team_name)
     items = []
@@ -164,24 +226,30 @@ def generate_media_bundle(roster, team_name, season_result):
             "team_theme": theme,
         })
 
+    # New — ticker coverage pulled from whatever actually happened this
+    # season, instead of hand-written copy per situation.
+    items += _note_media_items(season_result.get("notes", []), theme)
+
     return items
 
 
 
 def _effective_depth_contribution(depth_rating):
-    """Diminishing returns past ~70 — stacking bench investment every
-    offseason can't out-scale actual star talent forever."""
-    if depth_rating <= 70:
+    """Diminishing returns kick in earlier and bite harder — depth should
+    round out a roster, not let it substitute for star talent."""
+    if depth_rating <= 55:
         return depth_rating
-    return 70 + (depth_rating - 70) * 0.4
+    return 55 + (depth_rating - 55) * 0.25
 
 def compute_team_rating(roster, depth_rating, chemistry=65):
     core_ratings = [s["player"]["ovr"] for s in roster if s["player"]]
     core_avg = sum(core_ratings) / len(core_ratings) if core_ratings else 45
-    rating = 0.75 * core_avg + 0.25 * _effective_depth_contribution(depth_rating)
+    rating = 0.82 * core_avg + 0.18 * _effective_depth_contribution(depth_rating)
     rating += _position_balance_adjustment(roster)
     rating += _chemistry_adjustment(chemistry)
     return round(max(20, min(99, rating)))
+
+
 # --- Salary cap -------------------------------------------------------
 SALARY_CAP = 140.0  # $M, soft — going over just eats your cap space
 
@@ -934,7 +1002,12 @@ def resolve_offseason_choice(
             notes.append(f"The {star_name} talks collapse. He signs elsewhere for more money.")
 
     elif choice_id == "invest_in_depth":
-        depth_rating = min(99, depth_rating + random.randint(8, 14))
+        # Each additional point gets harder to find — quality bench
+        # players are scarce, so grinding this every offseason forever
+        # stops paying off the way it used to.
+        diminish = max(0.25, 1 - (depth_rating / 110))
+        gain = round(random.randint(8, 14) * diminish)
+        depth_rating = min(99, depth_rating + gain)
         names = depth_signees if depth_signees else [random_name(), random_name()]
         notes.append(f"{names[0]} and {names[1]} sign on as depth pieces off the bench.")
 
@@ -1676,7 +1749,7 @@ def _build_situation_payload(template, context):
 
 
 def maybe_generate_situation(roster, fan_support, hot_seat, champion=False, finals_mvp_name=None,
-                              philosophy=None):
+                              philosophy=None, last_situation_id=None):
     has_player = any(slot["player"] for slot in roster)
     ranked = sorted(
         (slot["player"] for slot in roster if slot["player"]),
@@ -1690,12 +1763,11 @@ def maybe_generate_situation(roster, fan_support, hot_seat, champion=False, fina
 
     if champion:
         champion_only = [q for q in REPORTER_QUESTIONS if q.get("requires_champion")]
-        template = random.choice(champion_only)
+        candidates = [q for q in champion_only if q["id"] != last_situation_id] or champion_only
+        template = random.choice(candidates)
         context = {"player_name": finals_mvp_name or "your best player"}
         return _build_situation_payload(template, context)
 
-    # Small market's identity cost: a star who's earned his way out gets
-    # restless. Weighted, not guaranteed — this doesn't fire every season.
     phil_info = FRONT_OFFICE_PHILOSOPHIES.get(philosophy, {})
     if phil_info.get("star_flight_risk") and best_player and best_player["ovr"] >= 85:
         if random.random() < 0.3:
@@ -1703,14 +1775,14 @@ def maybe_generate_situation(roster, fan_support, hot_seat, champion=False, fina
             context = {"player_name": best_player["name"]}
             return _build_situation_payload(template, context)
 
-    # Guarantee something every season, and give reporter questions real
-    # airtime instead of drowning them in the bigger situations pool.
     if random.random() < 0.5:
         pool = [q for q in REPORTER_QUESTIONS if not q.get("requires_champion")]
     else:
         pool = SITUATIONS
 
     def is_eligible(s):
+        if s["id"] == last_situation_id:
+            return False
         if s.get("requires_player") and not has_player:
             return False
         if s.get("requires_best_player") and not best_player:
@@ -1725,6 +1797,7 @@ def maybe_generate_situation(roster, fan_support, hot_seat, champion=False, fina
     if not eligible:
         eligible = [s for s in SITUATIONS if is_eligible(s)]
     if not eligible:
+        # last resort — allow repeats rather than crash if literally nothing else qualifies
         eligible = [s for s in SITUATIONS if not s.get("requires_player") and not s.get("requires_best_player")
                     and not s.get("requires_second_best_player") and not s.get("requires_knees_player")]
 
@@ -1741,7 +1814,6 @@ def maybe_generate_situation(roster, fan_support, hot_seat, champion=False, fina
         context["player_name"] = random.choice(candidates)["name"]
 
     return _build_situation_payload(template, context)
-
 
 def _all_situation_templates():
     return SITUATIONS + REPORTER_QUESTIONS
@@ -1884,6 +1956,12 @@ def resolve_situation(state, situation_id, choice_id, context=None, made_playoff
         "fan_support": fan_support, "hot_seat": hot_seat, "chemistry": chemistry,
     }
 
+    legacy_score = None
+    if new_state["season_number"] > TOTAL_SEASONS:
+        legacy_score = compute_legacy_score(
+            new_state["history"], fan_support, hot_seat, chemistry, new_state.get("max_streak", 0)
+        )
+
     next_decision = None
     cap_multiplier = state_updates.get("cap_multiplier", 1.0)
     if made_playoffs is not None and wins is not None:
@@ -1898,7 +1976,10 @@ def resolve_situation(state, situation_id, choice_id, context=None, made_playoff
             "options": offseason["options"],
         }
 
-    return {"state": new_state, "note": note, "next_decision": next_decision}
+    return {
+        "state": new_state, "note": note, "next_decision": next_decision,
+        "legacy_score": legacy_score,
+    }
 
 
 def new_game(city="", team_name="", philosophy="win_now"):
@@ -1925,6 +2006,7 @@ def new_game(city="", team_name="", philosophy="win_now"):
         "history": [],
         "streak": 0,
         "max_streak": 0,
+        "last_situation_id": None,
     }
     decision = {
         "season_number": 1, "pick_number": 1,
@@ -1950,17 +2032,10 @@ def advance_dynasty(state, choices):
     )
 
     season_result = simulate_season(roster, depth_rating, state["season_number"], philosophy, chemistry=chemistry)
-    season_result["media"] = generate_media_bundle(roster, state["team_name"], season_result)
 
     fan_support = max(5, min(99, state.get("fan_support", 50) + _fan_support_delta(season_result)))
     hot_seat = max(0, min(99, state.get("hot_seat", 20) + _hot_seat_delta(season_result, philosophy)))
 
-    # Give the cap real teeth. It was purely cosmetic before — you could
-    # blow past it forever with zero consequence. Now going over costs you:
-    # a luxury-tax-sized hot seat bump and a chemistry hit (an expensive,
-    # crowded roster breeds its own tension), scaling with how far over
-    # you are. A superteam running a stacked, over-cap roster should feel
-    # that pressure every single season, not just on the scoreboard.
     end_of_season_cap_space = cap_space(roster, depth_rating)
     over_cap = max(0.0, -end_of_season_cap_space)
     if over_cap > 0:
@@ -1980,6 +2055,8 @@ def advance_dynasty(state, choices):
     if hot_seat >= 80:
         extra_notes.append("Ownership is one bad month from a change.")
     season_result["notes"] = offseason_notes + season_result["notes"] + extra_notes
+
+    season_result["media"] = generate_media_bundle(roster, state["team_name"], season_result)
 
     streak = state["streak"] + 1 if season_result["champion"] else 0
     max_streak = max(state.get("max_streak", 0), streak)
@@ -2025,6 +2102,10 @@ def advance_dynasty(state, choices):
         philosophy=philosophy,
     )
 
+    legacy_score = None
+    if game_over:
+        legacy_score = compute_legacy_score(history, fan_support, hot_seat, chemistry, max_streak)
+
     return {
         "state": new_state,
         "season_result": season_result,
@@ -2032,4 +2113,5 @@ def advance_dynasty(state, choices):
         "game_over": game_over,
         "three_peat": max_streak >= 3,
         "pending_situation": pending_situation,
+        "legacy_score": legacy_score,
     }

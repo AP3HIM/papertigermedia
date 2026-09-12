@@ -27,6 +27,7 @@ export default function DynastyGame() {
   const [decision, setDecision] = useState(null);
   const [seasonResult, setSeasonResult] = useState(null);
   const [threePeat, setThreePeat] = useState(false);
+  const [legacyScore, setLegacyScore] = useState(null);
   const [gameOverPending, setGameOverPending] = useState(false);
   const [pendingSituation, setPendingSituation] = useState(null);
   const [error, setError] = useState(null);
@@ -38,6 +39,7 @@ export default function DynastyGame() {
       setDecision(saved.decision);
       setSeasonResult(saved.seasonResult);
       setThreePeat(saved.threePeat || false);
+      setLegacyScore(saved.legacyScore ?? null);
       setGameOverPending(saved.gameOverPending || false);
       setPendingSituation(saved.pendingSituation || null);
       setPhase(saved.phase);
@@ -52,6 +54,7 @@ export default function DynastyGame() {
       setDecision(data.decision);
       setSeasonResult(null);
       setThreePeat(false);
+      setLegacyScore(null);
       setGameOverPending(false);
       setPendingSituation(null);
       setPhase(PHASE.DECIDING);
@@ -62,6 +65,7 @@ export default function DynastyGame() {
         decision: data.decision,
         seasonResult: null,
         threePeat: false,
+        legacyScore: null,
         gameOverPending: false,
         pendingSituation: null,
       });
@@ -83,6 +87,9 @@ export default function DynastyGame() {
       setGameState(result.state);
       setSeasonResult(result.season_result);
       setThreePeat(result.three_peat);
+      if (typeof result.legacy_score === "number") {
+        setLegacyScore(result.legacy_score);
+      }
       setDecision(result.next_decision);
       setGameOverPending(result.game_over);
       setPendingSituation(result.pending_situation || null);
@@ -94,6 +101,7 @@ export default function DynastyGame() {
         decision: result.next_decision,
         seasonResult: result.season_result,
         threePeat: result.three_peat,
+        legacyScore: typeof result.legacy_score === "number" ? result.legacy_score : legacyScore,
         gameOverPending: result.game_over,
         pendingSituation: result.pending_situation || null,
       });
@@ -112,6 +120,7 @@ export default function DynastyGame() {
         decision,
         seasonResult,
         threePeat,
+        legacyScore,
         gameOverPending,
         pendingSituation,
       });
@@ -124,7 +133,16 @@ export default function DynastyGame() {
     if (nextPhase === PHASE.COMPLETE) {
       clearSave();
     } else {
-      writeSave({ phase: nextPhase, gameState, decision, seasonResult, threePeat, gameOverPending, pendingSituation: null });
+      writeSave({
+        phase: nextPhase,
+        gameState,
+        decision,
+        seasonResult,
+        threePeat,
+        legacyScore,
+        gameOverPending,
+        pendingSituation: null,
+      });
     }
   }
 
@@ -139,9 +157,15 @@ export default function DynastyGame() {
 
       setGameState(result.state);
       setPendingSituation(null);
+      if (typeof result.legacy_score === "number") {
+        setLegacyScore(result.legacy_score);
+      }
 
       const nextPhase = gameOverPending ? PHASE.COMPLETE : PHASE.DECIDING;
       setPhase(nextPhase);
+
+      const resolvedLegacyScore =
+        typeof result.legacy_score === "number" ? result.legacy_score : legacyScore;
 
       if (nextPhase === PHASE.COMPLETE) {
         clearSave();
@@ -152,6 +176,7 @@ export default function DynastyGame() {
           decision,
           seasonResult,
           threePeat,
+          legacyScore: resolvedLegacyScore,
           gameOverPending,
           pendingSituation: null,
         });
@@ -172,6 +197,7 @@ export default function DynastyGame() {
     setDecision(null);
     setSeasonResult(null);
     setThreePeat(false);
+    setLegacyScore(null);
     setGameOverPending(false);
     setPendingSituation(null);
     setPhase(PHASE.INTRO);
@@ -187,8 +213,16 @@ export default function DynastyGame() {
 
   if (phase === PHASE.STARTING) {
     return (
-      <div className="ptm-dynasty">
+      <div className="ptm-dynasty ptm-dynasty__loading-screen">
         <p className="ptm-dynasty__loading">Building your franchise…</p>
+        <p className="ptm-dynasty__loading-blurb">
+          Dynasty is a 10-season front-office sim — draft, sign free agents, weigh trade
+          offers, and live with the consequences. Every offseason move shifts your cap
+          space, your locker room chemistry, and how long ownership's patience lasts.
+          Win big and the city throws a parade. Lose too much and you're one bad season
+          from the hot seat. First load can take a little while to spin up the server —
+          hang tight.
+        </p>
       </div>
     );
   }
@@ -266,6 +300,7 @@ export default function DynastyGame() {
         depthRating={gameState.depth_rating}
         maxStreak={gameState.max_streak}
         threePeat={threePeat}
+        legacyScore={legacyScore}
         onRestart={handleRestart}
       />
     );

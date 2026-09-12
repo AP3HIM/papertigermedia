@@ -4,15 +4,15 @@ import "./GamesIndexPage.css";
 
 const GAMES = [
   {
-    to: "/games/23-guesses",
-    title: "23 Guesses",
-    subtitle: "Today's mystery, one clue at a time.",
-    status: "live",
-  },
-  {
     to: "/games/dynasty",
     title: "Dynasty",
     subtitle: "Ten seasons. Build an era.",
+    status: "live",
+  },
+  {
+    to: "/games/23-guesses",
+    title: "23 Guesses",
+    subtitle: "Today's mystery, one clue at a time.",
     status: "live",
   },
   {

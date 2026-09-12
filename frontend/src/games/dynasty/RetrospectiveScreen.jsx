@@ -1,5 +1,6 @@
 import Button from "../../components/Button";
 import RosterPanel from "./RosterPanel";
+import ShareButton from "./ShareButton";
 
 function closingLine(championships, threePeat) {
   if (threePeat) return "History remembers dynasties. This was one.";
@@ -17,6 +18,7 @@ export default function RetrospectiveScreen({
   depthRating,
   maxStreak,
   threePeat,
+  legacyScore,
   onRestart,
 }) {
   const championships = history.filter((h) => h.champion).length;
@@ -29,6 +31,13 @@ export default function RetrospectiveScreen({
       </h1>
 
       {threePeat && <p className="ptm-dynasty__three-peat">YOU BUILT A 3-PEAT.</p>}
+
+      {typeof legacyScore === "number" && (
+        <div className="ptm-dynasty__legacy-score">
+          <span className="ptm-dynasty__legacy-score-value">{legacyScore}</span>
+          <span className="ptm-dynasty__legacy-score-label">LEGACY SCORE</span>
+        </div>
+      )}
 
       <table className="ptm-dynasty__table">
         <thead>
@@ -65,6 +74,14 @@ export default function RetrospectiveScreen({
       <p className="ptm-dynasty__closing-line">{closingLine(championships, threePeat)}</p>
 
       <div className="ptm-dynasty__continue">
+        <ShareButton
+          city={city}
+          teamName={teamName}
+          history={history}
+          maxStreak={maxStreak}
+          threePeat={threePeat}
+          legacyScore={legacyScore}
+        />
         <Button onClick={onRestart}>START A NEW DYNASTY</Button>
       </div>
 

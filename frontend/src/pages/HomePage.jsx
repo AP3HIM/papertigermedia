@@ -5,25 +5,11 @@ import "./HomePage.css";
 
 const MORE = [
   {
-    to: "/games/dynasty",
-    title: "Dynasty",
-    subtitle: "Build a multi-season franchise. Live with every decision.",
+    to: "/games/23-guesses",
+    title: "23 Guesses",
+    subtitle: "Today's mystery, one clue at a time.",
     status: "live",
     label: "LIVE",
-  },
-  {
-    to: "/games/stat-challenge",
-    title: "Stat Challenge",
-    subtitle: "Turn sports statistics into a puzzle.",
-    status: "muted",
-    label: "PLANNED",
-  },
-  {
-    to: "/lab",
-    title: "Sports Lab",
-    subtitle: "Simulations, experiments, and 'what if' scenarios.",
-    status: "muted",
-    label: "PLANNED",
   },
   {
     to: "/articles",
@@ -55,14 +41,14 @@ export default function HomePage() {
       </section>
 
       <section className="ptm-container ptm-featured">
-        <p className="ptm-featured__eyebrow">TODAY</p>
+        <p className="ptm-featured__eyebrow">FEATURED</p>
         <div className="ptm-featured__row">
           <div>
-            <h2 className="ptm-featured__title">23 Guesses</h2>
-            <p className="ptm-featured__subtitle">Today's mystery is waiting.</p>
+            <h2 className="ptm-featured__title">Dynasty</h2>
+            <p className="ptm-featured__subtitle">Ten seasons. Build an era. Live with every decision.</p>
             <Badge tone="live">LIVE</Badge>
           </div>
-          <Button to="/games/23-guesses">PLAY</Button>
+          <Button to="/games/dynasty">PLAY</Button>
         </div>
       </section>
 
