@@ -190,10 +190,14 @@ NEWSPAPER_HEADLINES_BY_ROUND_LOST = {
 }
 
 MISSED_PLAYOFFS_HEADLINES = [
-    ("{team} MISS THE PLAYOFFS", "Another season on the outside looking in. The rebuild continues."),
-    ("{team} FAIL TO MAKE THE PLAYOFFS", "A disappointing season ends without a playoff berth. The team will need to regroup."),
-    ("{team} OUT OF CONTENTION", "The season ends with {team} missing the playoffs. Fans are left wondering what's next."),
-    ("What are the playoffs? {team} doesn't know."),
+    {"headline": "{team} MISS THE PLAYOFFS",
+     "subhead": "Another season on the outside looking in. The rebuild continues."},
+    {"headline": "{team} FAIL TO MAKE THE PLAYOFFS",
+     "subhead": "A disappointing season ends without a playoff berth. The team will need to regroup."},
+    {"headline": "{team} OUT OF CONTENTION",
+     "subhead": "The season ends with {team} missing the playoffs. Fans are left wondering what's next."},
+    {"headline": "WHAT ARE THE PLAYOFFS?",
+     "subhead": "{team} wouldn't know. Another year on the outside looking in."},
 ]
 
 NOTE_MEDIA_PATTERNS = [
